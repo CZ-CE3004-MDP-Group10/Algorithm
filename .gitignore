@@ -1,0 +1,29 @@
+### Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtualenv
+venv/
+ENV/
+Pipfile
+Pipfile.lock
+
+# IntelliJ IDEA
+.idea/
+out/
+MDP-Algorithms.iml
+
+# Java Class Files
+*.class
+
+# Java Package Files
+*.jar
+*.war
+*.ear
+
+# Java VM Crash Logs
+hs_err_pid*
+
+# OS X
+.DS_Store
