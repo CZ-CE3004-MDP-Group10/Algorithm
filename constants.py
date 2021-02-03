@@ -1,0 +1,4 @@
+NUM_ROWS = 20
+NUM_COLS = 15
+START_POS = (1, 1)
+GOAL_POS = (13, 18)
