@@ -383,7 +383,7 @@ class SimulatorGUI(GUI):
 
     def update_canvas(self):
         super(SimulatorGUI, self).update_canvas()
-        self.exploration_coverage.set("Coverage: {:.2f}%".format(self.exp.coverage * 100))
+        self.exploration_coverage.set("Coverage: {:.2f}%".format(self.exp.area_coverage * 100))
         time_elapsed = round(self.exp.time_elapsed)
 
         self.exploration_time.set("Time: {:02}:{:02}".format(time_elapsed // 60, time_elapsed % 60))

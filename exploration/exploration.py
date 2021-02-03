@@ -43,7 +43,7 @@ class Exploration:
 			self.on_calibrate = on_calibrate
 
 	@property
-	def coverage(self):
+	def area_coverage(self):
 		return 1 - (sum([row.count(Cell.UNEXPLORED) for row in self.explored_map]) / (NUM_ROWS * NUM_COLS))
 
 	@property
@@ -52,7 +52,7 @@ class Exploration:
 
 	@property
 	def is_limit_exceeded(self):
-		is_coverage_limit_exceeded = self.coverage_limit is not None and self.coverage_limit < self.coverage
+		is_coverage_limit_exceeded = self.coverage_limit is not None and self.coverage_limit < self.area_coverage
 		is_time_limit_exceeded = self.time_limit is not None and self.time_limit <\
 			self.time_elapsed + (FastestPath.heuristic_function(self.robot.pos, START_POS) * 2) / self.robot.speed
 
