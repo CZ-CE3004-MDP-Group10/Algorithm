@@ -3,7 +3,7 @@ Simulation and algorithm
 
 
 ## CheckList ##
-* - [ x ] Do Documentation, due 29/1
+- [x] Do Documentation, due 29/1
 * - [ x ] Setup Map
 * - [ ] Setup Exploration App
   * - [ ] Setup Exploration Algo
