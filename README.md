@@ -14,3 +14,5 @@ Simulation and algorithm
 * - [ ] Setup Sensor
 * - [ ] Setup Connection to Rpi []
 * - [ ] Setup Connection to Android []
+
+
