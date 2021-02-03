@@ -53,7 +53,7 @@ class GUI:
 
     def display_canvas(self):
         self.canvas = tk.Canvas(self.root, height=NUM_ROWS * GUI.CELL_SIZE, width=NUM_COLS * GUI.CELL_SIZE, bg='white')
-        self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=10, pady=20)
+        self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=0, pady=20)
 
         #self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=20, pady=20)
         self.update_map()
@@ -197,36 +197,22 @@ class SimulatorGUI(GUI):
         self.robot_speed = None
 
     def display_side_panel(self):
-        #root = tk() 
-        side_panel = tk.Frame(self.root)#,width=600,height=1000)
-        #side_panel.pack()
         
-        mycanvas=Canvas(side_panel)
-        mycanvas.pack(side=LEFT,fill="both",expand="yes")
-        yscrollbar=ttk.Scrollbar(side_panel, orient="vertical",command=mycanvas.yview)
-        yscrollbar.pack(side=RIGHT,fill="y")
-        mycanvas.configure(yscrollcommand=yscrollbar.set)
-        mycanvas.bind('<Configure>',lambda e: mycanvas.configure(scrollregion= mycanvas.bbox('all')))
-
-        myframe=Frame(mycanvas)
+        side_panel = tk.Frame(self.root)
+        left_sidepanel=tk.Frame(side_panel)
+        left_sidepanel.pack(side=LEFT,padx=(18,10))
+        right_sidepanel=tk.Frame(side_panel)
+        right_sidepanel.pack(side=RIGHT,padx=(10,18))
         
-        mycanvas.create_window((0,0),window=myframe,anchor="nw")
-
-        side_panel.pack(side=tk.LEFT, padx=5, pady=20)
-
-        #side_panel.pack(side=tk.LEFT, padx=20, pady=20)
-        #side_panel.propagate(0)
-
+        side_panel.pack(side=tk.LEFT, padx=0, pady=20)
 
         # Error Frame
-        #self.error_frame = tk.Frame(side_panel)
-        self.error_frame = tk.Frame(myframe)
-        self.error_frame.pack(fill=tk.X, pady=10)
+        self.error_frame = tk.Frame(left_sidepanel)
+        self.error_frame.pack(fill=tk.X, pady=0)
 
         # Algorithms Frame
-        #algorithms_frame = tk.Frame(side_panel)
-        algorithms_frame = tk.Frame(myframe)
-        algorithms_frame.pack(fill=tk.X, pady=10)
+        algorithms_frame = tk.Frame(left_sidepanel)
+        algorithms_frame.pack(fill=tk.X, pady=0)
 
         self.create_heading(algorithms_frame, "Algorithms").pack()
         self.create_button(algorithms_frame, "Exploration", lambda: self.execute_thread(self.exploration)) \
@@ -240,7 +226,7 @@ class SimulatorGUI(GUI):
             .pack(fill=tk.X)
 
         # Map Select Frame
-        map_select_frame = tk.Frame(myframe)
+        map_select_frame = tk.Frame(left_sidepanel)
 
         #map_select_frame = tk.Frame(side_panel)
         map_select_frame.pack(fill=tk.X, pady=10)
@@ -260,7 +246,7 @@ class SimulatorGUI(GUI):
             .pack(fill=tk.X)
 
         # Exploration Frame
-        exploration_frame = tk.Frame(side_panel)
+        exploration_frame = tk.Frame(right_sidepanel)
         exploration_frame.pack(fill=tk.X, pady=10)
 
         self.create_heading(exploration_frame, "Exploration").pack(fill=tk.X)
@@ -287,7 +273,7 @@ class SimulatorGUI(GUI):
         tk.Spinbox(exploration_frame, from_=0, to=360, textvariable=self.time_limit_input).pack(fill=tk.X)
 
         # Waypoint Frame
-        waypoint_frame = tk.Frame(side_panel)
+        waypoint_frame = tk.Frame(right_sidepanel)
         waypoint_frame.pack(fill=tk.X, pady=10)
 
         self.create_heading(waypoint_frame, "Waypoint").pack()
@@ -308,7 +294,7 @@ class SimulatorGUI(GUI):
             .pack(fill=tk.X, side=tk.LEFT)
 
         # Speed Setting
-        speed_frame = tk.Frame(side_panel)
+        speed_frame = tk.Frame(right_sidepanel)
         speed_frame.pack(fill=tk.X, pady=10)
 
         self.create_heading(speed_frame, "Robot Speed (Moves Per Second)").pack(fill=tk.X)
@@ -383,7 +369,7 @@ class SimulatorGUI(GUI):
 
     def update_canvas(self):
         super(SimulatorGUI, self).update_canvas()
-        self.exploration_coverage.set("Coverage: {:.2f}%".format(self.exp.area_coverage * 100))
+        self.exploration_coverage.set("Coverage: {:.2f}%".format(self.exp.coverage * 100))
         time_elapsed = round(self.exp.time_elapsed)
 
         self.exploration_time.set("Time: {:02}:{:02}".format(time_elapsed // 60, time_elapsed % 60))
@@ -408,6 +394,7 @@ class SimulatorGUI(GUI):
                 self.robot.move(movement)
 
         else:
+            print("NO PATH FOUND!")
             self.display_error_msg("No path found")
 
         self.is_running = False
