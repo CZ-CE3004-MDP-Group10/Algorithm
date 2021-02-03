@@ -3,8 +3,8 @@ Simulation and algorithm
 
 
 ## CheckList ##
-* - [ ] Do Documentation, due 29/1
-* - [ ] Setup Map
+* - [x] Do Documentation, due 29/1
+* - [x] Setup Map
 * - [ ] Setup Exploration App
   * - [ ] Setup Exploration Algo
   * - [ ] Setup PathFinder
@@ -14,3 +14,5 @@ Simulation and algorithm
 * - [ ] Setup Sensor
 * - [ ] Setup Connection to Rpi []
 * - [ ] Setup Connection to Android []
+
+
