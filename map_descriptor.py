@@ -77,7 +77,7 @@ def generate_map_descriptor(map_grid):
 
 
 def main():
-	with open("maps/map1.txt", "r") as f:
+	with open("maps/sample_arena3.txt", "r") as f:
 		strs = f.read().split("\n")
 
 	map_grid = generate_map(*strs)
