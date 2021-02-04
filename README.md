@@ -7,8 +7,7 @@ Simulation and algorithm
 * - [x] Setup Git
 * - [x] Setup Map
 * - [ ] Setup Exploration App
-  * - [ ] Setup Exploration Algo
-  * - [ ] Setup PathFinder
+  * - [ ] Setup Exploration
   * - [ ] Setup Fastest Path Finder
 
 * - [ ] Setup Robot
