@@ -17,7 +17,7 @@ BUFFER_SIZE = 512;
 
 class RPi:
     HOST = "192.168.10.1"
-    PORT = 8080
+    PORT = 101
 
     # Message Types
     HELLO_MSG = "HELLO"
@@ -32,10 +32,12 @@ class RPi:
     TAKE_PHOTO_MSG = "P"
     MOVEMENT_MSG = "M"
     MDF_MSG = "D"
+    '''
     HIGH_SPEED_MSG = "H"
     LOW_SPEED_MSG = "T"
+    '''
     QUIT_MSG = "Q"
-    TYPE_DIVIDER = ":"
+    TYPE_DIVIDER = "|"
 
     def __init__(self, on_quit=None):
         self.conn = None
@@ -45,7 +47,7 @@ class RPi:
 
     def open_connection(self):
         try:
-            self.conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#socket.SOCK_DGRAM)
             self.conn.connect((RPi.HOST, RPi.PORT))
             self.is_connected = True
             print("Successfully established connection...")
@@ -225,10 +227,10 @@ class RPi:
 def main():
     rpi = RPi()
     rpi.open_connection()
-    rpi.send("Hello there")
+    rpi.send("ALG|Hello there FROM ALGO TEAM!!!!")
     msg = rpi.receive()
     print(msg)
-    rpi.close_connection()
+    #rpi.close_connection()
 
 
 if __name__ == '__main__':
