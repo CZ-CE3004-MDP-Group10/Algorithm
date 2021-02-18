@@ -66,7 +66,7 @@ class RPi:
 
     def send(self, msg):
         try:
-            self.conn.sendall(str.encode(msg))
+            self.conn.sendall(msg.encode("utf-8"))
             print("Message sent:", msg)
 
         except Exception as e:
