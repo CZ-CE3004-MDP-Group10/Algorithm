@@ -294,7 +294,7 @@ class FastestPath:
 
 
 def main():
-	with open("maps/map3.txt", "r") as f:
+	with open("../maps/sample_arena1.txt", "r") as f:
 		strs = f.read().split("\n")
 
 	map_test = generate_map(*strs)
