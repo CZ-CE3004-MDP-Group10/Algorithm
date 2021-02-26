@@ -60,10 +60,10 @@ class Movement(IntEnum):
 	@staticmethod
 	def convert_to_string(movement):
 		if movement == Movement.FORWARD:
-			return "F"
+			return "F1"
 		elif movement == Movement.RIGHT:
-			return "R"
+			return "R1"
 		elif movement == Movement.BACKWARD:
-			return "B"
+			return "B1"
 		else:  # Movement.LEFT
-			return "L"
+			return "L1"

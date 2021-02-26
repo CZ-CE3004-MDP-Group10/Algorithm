@@ -38,6 +38,7 @@ class FastestPath:
 	def compute_fastest_path(self):
 		"""Calculates the fastest path from the source to the destination, possibly with a waypoint.
 		"""
+		print("FASTEST PATH")
 		if self.waypoint:
 			steps0 = self.a_star(self.source, self.waypoint)
 			steps1 = self.a_star(self.waypoint, self.dest)

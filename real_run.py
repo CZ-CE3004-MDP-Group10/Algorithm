@@ -9,6 +9,7 @@ from enums import Direction, Cell, Movement
 from map_descriptor import generate_map_descriptor
 from gui import GUI
 from utils import generate_unexplored_map
+import time
 import re
 
 # Set to True for complete image recognition exploration
@@ -33,13 +34,20 @@ class RealRun:
 
 	def start(self):
 		self.rpi.open_connection()
+
 		self.rpi.ping()
+
 		Thread(target=self.connect_to_rpi).start()
 		self.rpi.receive_endlessly()
 
 	def connect_to_rpi(self):
 		while True:
 			msg_type, msg = self.rpi.receive_msg_with_type()
+
+			if(True):
+				time.sleep(5)
+
+				self.robot.move(Movement.RIGHT)
 
 			if msg_type == RPi.CALIBRATE_MSG:
 				self.calibrate()
@@ -98,7 +106,7 @@ class RealRun:
 
 			# Waypoint
 			elif msg_type == RPi.WAYPOINT_MSG:
-				# Sample message: W:1,1
+				# Sample message: FPW|1,1
 				m = re.match(r"\(?(\d+),\s*(\d+\)?)", msg)
 
 				if m is None:

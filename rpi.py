@@ -20,11 +20,11 @@ class RPi:
     PORT = 101
 
     # Message Types
-    HELLO_MSG = "HELLO"
+    HELLO_MSG = "ARD|F1"
     CALIBRATE_MSG = "C"
     CALIBRATE_FRONT_MSG = "f"
     CALIBRATE_RIGHT_MSG = "r"
-    EXPLORE_MSG = "ET"
+    EXPLORE_MSG = "EXP"
     FASTEST_PATH_MSG = "FP"
     WAYPOINT_MSG = "FPW"
     REPOSITION_MSG = "R"
@@ -113,17 +113,17 @@ class RPi:
 
     def ping(self):
         # Sample message: HELLO
-        self.send(RPi.HELLO_MSG)
+        self.send("ARD|F1")
 
     def send_movement(self, movement, robot):
         print(movement)
         if movement == Movement.FORWARD:
-            movement_str = "1"
+            movement_str = "F1"
         elif isinstance(movement, Movement):
             movement_str = Movement.convert_to_string(movement)
         else:
             movement_str = str(movement)
-
+        #F1,L1,R1,B1
         # Sample message: M:R 1,2 E
         msg = "{} {},{} {}".format(
             movement_str,
@@ -131,7 +131,8 @@ class RPi:
             robot.pos[1],
             Direction.convert_to_string(robot.direction),
         )
-        self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
+        #self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
+        self.send_msg_with_type("ARD", msg)
         return self.receive_sensor_values(send_msg=False)
 
     def send_map(self, explored_map):

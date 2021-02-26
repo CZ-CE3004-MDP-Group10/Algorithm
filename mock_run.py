@@ -43,7 +43,7 @@ class MockRun:
 
             time.sleep(10)
             # Fastest Path
-            #if msg_type == RPi.FASTEST_PATH_MSG:
+            # if msg_type == RPi.FASTEST_PATH_MSG:
             self.is_running = True
 
             self.robot.pos = START_POS
