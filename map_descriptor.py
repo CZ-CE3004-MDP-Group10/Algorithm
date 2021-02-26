@@ -49,6 +49,12 @@ def generate_map(explored_str, obstacle_str):
     return map_grid
 
 
+def generate_map_for_android(explored_str, obstacle_str):
+    combined_bin = explored_str + obstacle_str
+
+    return {"grid": combined_bin}
+
+
 # Generates 2 String descriptor of the map_grid provided
 
 def generate_map_descriptor(map_grid):
@@ -86,10 +92,12 @@ def main():
     with open("maps/sample_arena1.txt", "r") as f:
         arena_map_string_array = f.read().split("\n")
 
-    print(arena_map_string_array)
-    map_grid = generate_map(*arena_map_string_array)
-    #print(generate_map_descriptor(map_grid))
-    #print_map(map_grid)
+    mapp = generate_map_for_android(*arena_map_string_array)
+    print(mapp)
+    # print(arena_map_string_array)
+    # map_grid = generate_map(*arena_map_string_array)
+    # print(generate_map_descriptor(map_grid))
+    # print_map(map_grid)
 
 
 if __name__ == "__main__":
