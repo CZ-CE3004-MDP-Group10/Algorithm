@@ -86,9 +86,10 @@ def main():
     with open("maps/sample_arena1.txt", "r") as f:
         arena_map_string_array = f.read().split("\n")
 
+    print(arena_map_string_array)
     map_grid = generate_map(*arena_map_string_array)
-    print(generate_map_descriptor(map_grid))
-    print_map(map_grid)
+    #print(generate_map_descriptor(map_grid))
+    #print_map(map_grid)
 
 
 if __name__ == "__main__":
