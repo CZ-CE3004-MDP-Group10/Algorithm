@@ -3,7 +3,7 @@ from utils import print_map, generate_unexplored_map
 from map_descriptor import generate_map
 from constants import START_POS, GOAL_POS, NUM_ROWS, NUM_COLS
 from robots import SimulatorBot
-from fastest_path import FastestPath
+from .fastest_path import FastestPath
 
 COMBINED_MOVEMENT = True
 MIN_STEPS_WITHOUT_CALIBRATION = 0

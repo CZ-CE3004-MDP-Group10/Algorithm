@@ -29,7 +29,7 @@ class RealRun:
         self.exp = None
         self.is_running = False
         # self.explored_map = generate_unexplored_map()  #for exploration
-        with open("../maps/fastest_path_arena.txt", "r") as f:
+        with open("maps/fastest_path_arena.txt", "r") as f:
             real_run_fastest_path_map_str = f.read().split("\n")
         self.explored_map = generate_map(*real_run_fastest_path_map_str)
         self.waypoint = None
