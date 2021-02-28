@@ -1,6 +1,7 @@
 import socket
 from enums import Movement, Direction
 from map_descriptor import generate_map_descriptor
+from map_descriptor import generate_map_descriptor_for_android
 import re
 from collections import deque
 from datetime import datetime
@@ -136,8 +137,8 @@ class RPi:
         return self.receive_sensor_values(send_msg=False)
 
     def send_map(self, explored_map):
-        # Sample message: D:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,000000000400000001C800000000000700000000800000001F80000700000000020000000000
-        self.send_msg_with_type(RPi.MDF_MSG, ",".join(generate_map_descriptor(explored_map)))
+        # self.send_msg_with_type(RPi.MDF_MSG, ",".join(generate_map_descriptor(explored_map))
+        self.send_msg_with_type(RPi.MDF_MSG, generate_map_descriptor_for_android(explored_map))
 
     def receive_sensor_values(self, send_msg=True):
         # Sample message: S

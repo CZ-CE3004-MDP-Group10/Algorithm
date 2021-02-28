@@ -301,7 +301,7 @@ def main():
 	map_test = generate_map(*strs)
 	fp = FastestPath(map_test, Direction.EAST, START_POS, GOAL_POS)
 
-	print_map(FastestPath.add_virtual_obstacles(map_test), fp.steps)
+	#print_map(FastestPath.add_virtual_obstacles(map_test), fp.steps)
 
 	if fp.path_found:
 		for i, step in enumerate(fp.steps):

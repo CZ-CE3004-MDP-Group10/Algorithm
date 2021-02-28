@@ -82,13 +82,46 @@ def generate_map_descriptor(map_grid):
     return explored_str, obstacle_str
 
 
+# Generates map descriptor for android in the format of {"grid" : "xxx"}
+def generate_map_descriptor_for_android(map_grid):
+    explored_bin = "11"
+    obstacle_bin = ""
+
+    for r in range(NUM_ROWS):
+        for c in range(NUM_COLS):
+            cell = map_grid[r][c]
+
+            if cell == Cell.UNEXPLORED:
+                explored_bin += "0"
+
+            elif cell == Cell.FREE:
+                explored_bin += "1"
+                obstacle_bin += "0"
+
+            elif cell == Cell.OBSTACLE:
+                explored_bin += "1"
+                obstacle_bin += "1"
+
+    explored_bin += "11"
+
+    if len(obstacle_bin) % 8 != 0:
+        num_pad_bits = 8 - len(obstacle_bin) % 8
+        obstacle_bin += "0" * num_pad_bits
+
+    explored_str = bin_to_hex(explored_bin)
+    obstacle_str = bin_to_hex(obstacle_bin)
+
+    return {"grid": explored_str + obstacle_str}
+
+
 def main():
     with open("maps/sample_arena1.txt", "r") as f:
         arena_map_string_array = f.read().split("\n")
 
     map_grid = generate_map(*arena_map_string_array)
-    print(generate_map_descriptor(map_grid))
-    print_map(map_grid)
+    print(generate_map_descriptor_for_android(map_grid))
+    # print(generate_map_descriptor(map_grid))
+    # print_map(map_grid)
 
 
 if __name__ == "__main__":
