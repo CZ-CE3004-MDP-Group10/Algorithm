@@ -29,7 +29,7 @@ class RealRun:
         self.exp = None
         self.is_running = False
         # self.explored_map = generate_unexplored_map()  #for exploration
-        with open("../maps/fastest_path_arena.txt", "r") as f:
+        with open("maps/fastest_path_arena.txt", "r") as f:
             real_run_fastest_path_map_str = f.read().split("\n")
         self.explored_map = generate_map(*real_run_fastest_path_map_str)
         self.waypoint = None
@@ -39,138 +39,135 @@ class RealRun:
     def start(self):
         self.rpi.open_connection()
 
-        self.rpi.ping()
+        # self.rpi.ping()
 
         Thread(target=self.connect_to_rpi).start()
         self.rpi.receive_endlessly()
 
     def connect_to_rpi(self):
-        while True:
-            msg_type, msg = self.rpi.receive_msg_with_type()
+        # while True:
+        msg_type, msg = self.rpi.receive_msg_with_type()
+        msg_type = RPi.FASTEST_PATH_MSG
 
-            if (True):
-                time.sleep(5)
+        if msg_type == RPi.CALIBRATE_MSG:
+            self.calibrate()
 
-                self.robot.move(Movement.RIGHT)
+        # Exploration
+        elif msg_type == RPi.EXPLORE_MSG:
+            self.is_running = True
+            self.rpi.set_speed(is_high=False)
+            self.explored_map = generate_unexplored_map()
+            self.gui.map = self.explored_map
+            self.on_update()
 
-            if msg_type == RPi.CALIBRATE_MSG:
-                self.calibrate()
-
-            # Exploration
-            elif msg_type == RPi.EXPLORE_MSG:
-                self.is_running = True
-                self.rpi.set_speed(is_high=False)
-                self.explored_map = generate_unexplored_map()
-                self.gui.map = self.explored_map
-                self.on_update()
-
-                if USE_COMPLETE_IMAGE_REC_EXPLORATION:
-                    self.exp = CompleteImageRecExploration(
-                        robot=self.robot,
-                        on_update_map=self.on_update,
-                        on_calibrate=self.rpi.calibrate,
-                        on_take_photo=self.rpi.take_photo,
-                        explored_map=self.explored_map,
-                        time_limit=350
-                    )
-                else:
-                    self.exp = ShortImageRecExploration(
-                        robot=self.robot,
-                        on_update_map=self.on_update,
-                        on_calibrate=self.rpi.calibrate,
-                        on_take_photo=self.rpi.take_photo,
-                        explored_map=self.explored_map,
-                        time_limit=350
-                    )
-
-                c, r = self.robot.pos
-                for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
-                    for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
-                        self.exp.explored_map[i][j] = Cell.FREE
-
-                self.update_gui()
-
-                # Run exploration
-                self.exp.run_exploration()
-
-                # Prepare robot position for fastest path
-                if self.robot.pos == START_POS:
-                    if self.robot.direction == Direction.SOUTH:
-                        self.robot.move(Movement.LEFT)
-                    elif self.robot.direction == Direction.WEST:
-                        self.robot.move(Movement.RIGHT)
-
-                    self.calibrate()
-
-                self.is_running = False
-
-                mdf = generate_map_descriptor(self.explored_map)
-                print("MDF:", ",".join(mdf))
-                self.rpi.send(RPi.EXPLORE_MSG)
-
-            # Waypoint
-            elif msg_type == RPi.WAYPOINT_MSG:
-                # Sample message: FPW|1,1
-                m = re.match(r"\(?(\d+),\s*(\d+\)?)", msg)
-
-                if m is None:
-                    print("Unable to update waypoint")
-                    continue
-
-                self.waypoint = (int(m.group(1)), int(m.group(2)))
-                print("Waypoint:", self.waypoint)
-
-                self.gui.waypoint = self.waypoint
-                self.update_gui()
-
-            # Reposition
-            elif msg_type == RPi.REPOSITION_MSG:
-                # Sample message: M:1,1 N
-                m = re.match(r"\(?(\d+),\s*(\d+)\)?\s*([NSEW])", msg)
-
-                if m is None:
-                    print("Unable to reposition")
-                    continue
-
-                c = int(m.group(1))
-                r = int(m.group(2))
-                self.robot.pos = (c, r)
-                self.robot.direction = Direction.convert_from_string(m.group(3))
-
-                for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
-                    for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
-                        self.explored_map[i][j] = Cell.FREE
-
-                self.update_gui()
-
-                if self.robot.pos == START_POS:
-                    self.calibrate()
-
-                self.update_gui()
-
-            # Fastest Path
-            elif msg_type == RPi.FASTEST_PATH_MSG:
-                self.is_running = True
-
-                self.rpi.set_speed(is_high=True)
-
-                self.robot.pos = START_POS
-                self.update_gui()
-
-                fp = CalibrateFastestPath(
+            if USE_COMPLETE_IMAGE_REC_EXPLORATION:
+                self.exp = CompleteImageRecExploration(
                     robot=self.robot,
+                    on_update_map=self.on_update,
                     on_calibrate=self.rpi.calibrate,
+                    on_take_photo=self.rpi.take_photo,
                     explored_map=self.explored_map,
-                    waypoint=self.waypoint
+                    time_limit=350
+                )
+            else:
+                self.exp = ShortImageRecExploration(
+                    robot=self.robot,
+                    on_update_map=self.on_update,
+                    on_calibrate=self.rpi.calibrate,
+                    on_take_photo=self.rpi.take_photo,
+                    explored_map=self.explored_map,
+                    time_limit=350
                 )
 
-                # Run fastest path
-                fp.run_fastest_path()
+            c, r = self.robot.pos
+            for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
+                for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
+                    self.exp.explored_map[i][j] = Cell.FREE
 
-                # self.rpi.send(RPi.FASTEST_PATH_MSG)
-                print("FASTEST PATH COMPLETE!")
+            self.update_gui()
 
-                self.is_running = False
+            # Run exploration
+            self.exp.run_exploration()
+
+            # Prepare robot position for fastest path
+            if self.robot.pos == START_POS:
+                if self.robot.direction == Direction.SOUTH:
+                    self.robot.move(Movement.LEFT)
+                elif self.robot.direction == Direction.WEST:
+                    self.robot.move(Movement.RIGHT)
+
+                self.calibrate()
+
+            self.is_running = False
+
+            mdf = generate_map_descriptor(self.explored_map)
+            print("MDF:", ",".join(mdf))
+            self.rpi.send(RPi.EXPLORE_MSG)
+
+        # Waypoint
+        elif msg_type == RPi.WAYPOINT_MSG:
+            # Sample message: FPW|1,1
+            m = re.match(r"\(?(\d+),\s*(\d+\)?)", msg)
+
+            if m is None:
+                print("Unable to update waypoint")
+
+            self.waypoint = (int(m.group(1)), int(m.group(2)))
+            print("Waypoint:", self.waypoint)
+
+            self.gui.waypoint = self.waypoint
+            self.update_gui()
+
+        # Reposition
+        elif msg_type == RPi.REPOSITION_MSG:
+            # Sample message: M:1,1 N
+            m = re.match(r"\(?(\d+),\s*(\d+)\)?\s*([NSEW])", msg)
+
+            if m is None:
+                print("Unable to reposition")
+
+            c = int(m.group(1))
+            r = int(m.group(2))
+            self.robot.pos = (c, r)
+            self.robot.direction = Direction.convert_from_string(m.group(3))
+
+            for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
+                for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
+                    self.explored_map[i][j] = Cell.FREE
+
+            self.update_gui()
+
+            if self.robot.pos == START_POS:
+                self.calibrate()
+
+            self.update_gui()
+
+        # Fastest Path
+        elif msg_type == RPi.FASTEST_PATH_MSG:
+            time.sleep(3)
+            # self.rpi.send("ARD|F1,L1,R1,F1,R1,L1,F1")
+            self.is_running = True
+
+            self.rpi.set_speed(is_high=True)
+
+            self.robot.pos = START_POS
+            self.update_gui()
+
+            fp = CalibrateFastestPath(
+                robot=self.robot,
+                on_calibrate=self.rpi.calibrate,
+                explored_map=self.explored_map,
+                waypoint=self.waypoint
+            )
+
+            # Run fastest path
+            fp_string = fp.run_fastest_path()
+            self.rpi.send(("ARD|" + fp_string))
+
+            # self.rpi.send(RPi.FASTEST_PATH_MSG)
+            print("FASTEST PATH COMPLETE!")
+
+            self.is_running = False
 
     def display_gui(self):
         self.gui.start()

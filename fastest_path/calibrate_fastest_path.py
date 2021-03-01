@@ -3,10 +3,11 @@ from utils import print_map, generate_unexplored_map
 from map_descriptor import generate_map
 from constants import START_POS, GOAL_POS, NUM_ROWS, NUM_COLS
 from robots import SimulatorBot
-from fastest_path import FastestPath
+from .fastest_path import FastestPath
+import time
 
 COMBINED_MOVEMENT = True
-MIN_STEPS_WITHOUT_CALIBRATION = 0
+MIN_STEPS_WITHOUT_CALIBRATION = 1000
 
 class CalibrateFastestPath:
 	def __init__(self, robot, on_calibrate=None, explored_map=None, waypoint=None):
@@ -32,13 +33,20 @@ class CalibrateFastestPath:
 
 	def run_fastest_path(self):
 		fp = FastestPath(self.explored_map, self.robot.direction, START_POS, GOAL_POS, self.waypoint)
-		movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
+		#movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
+		movements = fp.custom_combined_movements() if COMBINED_MOVEMENT else fp.movements
+		print(movements)
 
+		return movements
+		"""
 		if movements is not None:
 			for movement in movements:
 				self.calibrate()
 				self.steps_without_calibration += 1
+				print("MOVEMENT: ")
+				print(movement)
 				self.robot.move(movement)
+		"""
 
 	def calibrate(self):
 		front_direction = self.robot.direction

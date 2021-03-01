@@ -111,8 +111,7 @@ def generate_map_descriptor_for_android(map_grid):
     explored_str = bin_to_hex(explored_bin)
     obstacle_str = bin_to_hex(obstacle_bin)
 
-    return {"grid": explored_str + obstacle_str}
-
+    return {"exploredPath": explored_str, "grid": obstacle_str}
 
 def main():
     with open("maps/sample_arena1.txt", "r") as f:

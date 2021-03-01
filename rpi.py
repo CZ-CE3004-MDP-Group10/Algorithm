@@ -126,15 +126,20 @@ class RPi:
             movement_str = str(movement)
         #F1,L1,R1,B1
         # Sample message: M:R 1,2 E
+        """
         msg = "{} {},{} {}".format(
             movement_str,
             robot.pos[0],
             robot.pos[1],
             Direction.convert_to_string(robot.direction),
         )
+        """
+        msg = "{}".format(
+            movement_str
+        )
         #self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
         self.send_msg_with_type("ARD", msg)
-        return self.receive_sensor_values(send_msg=False)
+        #return self.receive_sensor_values(send_msg=False)
 
     def send_map(self, explored_map):
         # self.send_msg_with_type(RPi.MDF_MSG, ",".join(generate_map_descriptor(explored_map))
@@ -150,7 +155,7 @@ class RPi:
         while True:
             # Ask for sense message again if it's been too long
             if time.time() - sent_time > 3:
-                self.send(RPi.SENSE_MSG)
+                #self.send(RPi.SENSE_MSG) #1st March
                 sent_time = time.time()
 
             # Sample message: S:1,1,1,1,1,1
@@ -217,8 +222,9 @@ class RPi:
 
     def set_speed(self, is_high=True):
         # Sample message: H
-        speed_msg = RPi.HIGH_SPEED_MSG if is_high else RPi.LOW_SPEED_MSG
-        self.send(speed_msg)
+        #speed_msg = RPi.HIGH_SPEED_MSG if is_high else RPi.LOW_SPEED_MSG
+        #self.send(speed_msg)
+        pass
 
     def receive_endlessly(self):
         while True:

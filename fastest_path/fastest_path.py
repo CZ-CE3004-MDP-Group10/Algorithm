@@ -293,6 +293,38 @@ class FastestPath:
 
 		return combined_movement_list
 
+	def custom_combined_movements(self):
+		combined_movement_list = []
+		forward_count = 0
+
+		if self.movements is None:
+			return None
+
+		for movement in self.movements:
+			if movement == Movement.FORWARD:
+				forward_count += 1
+
+				if forward_count == 5:
+					combined_movement_list.append("F5")
+					forward_count = 0
+
+			else:
+				if forward_count != 0:
+					combined_movement_list.append("F{}".format(forward_count))
+
+				forward_count = 0
+				if movement == Movement.LEFT:
+					combined_movement_list.append("L1")
+				elif movement == Movement.RIGHT:
+					combined_movement_list.append("R1")
+				else:
+					combined_movement_list.append("B1")
+
+		if forward_count != 0:
+			combined_movement_list.append("F{}".format(forward_count))
+
+		return ''.join(combined_movement_list)
+
 
 def main():
 	with open("../maps/sample_arena1.txt", "r") as f:
@@ -301,7 +333,6 @@ def main():
 	map_test = generate_map(*strs)
 	fp = FastestPath(map_test, Direction.EAST, START_POS, GOAL_POS)
 
-	#print_map(FastestPath.add_virtual_obstacles(map_test), fp.steps)
 
 	if fp.path_found:
 		for i, step in enumerate(fp.steps):
