@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 from constants import NUM_ROWS, NUM_COLS, START_POS, GOAL_POS
 from enums import Cell, Direction, Movement
 from utils import print_map
