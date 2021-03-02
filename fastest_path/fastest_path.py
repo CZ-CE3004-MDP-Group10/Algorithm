@@ -322,8 +322,10 @@ class FastestPath:
 
         if forward_count != 0:
             combined_movement_list.append("F{}".format(forward_count))
-        #combined_movement_list = combined_movement_list[:10]
-        return ''.join(combined_movement_list)
+
+        fastest_path = ''.join(combined_movement_list)
+        # fastest_path = combined_movement_list
+        return fastest_path
 
 
 def main():
