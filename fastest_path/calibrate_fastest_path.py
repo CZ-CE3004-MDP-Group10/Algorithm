@@ -13,6 +13,7 @@ class CalibrateFastestPath:
 	def __init__(self, robot, on_calibrate=None, explored_map=None, waypoint=None):
 		"""
 		Args:
+
 			robot (robots.Robot): Robot object to explore the map.
 			on_update_map (function): Function called whenever the map is updated.
 			explored_map (list): 2D list of Cell objects representing the map.
