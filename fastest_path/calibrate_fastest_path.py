@@ -3,7 +3,7 @@ from utils import print_map, generate_unexplored_map
 from map_descriptor import generate_map
 from constants import START_POS, GOAL_POS, NUM_ROWS, NUM_COLS
 from robots import SimulatorBot
-from .fastest_path import FastestPath
+from fastest_path import FastestPath
 import time
 
 COMBINED_MOVEMENT = True
@@ -35,7 +35,6 @@ class CalibrateFastestPath:
 		fp = FastestPath(self.explored_map, self.robot.direction, START_POS, GOAL_POS, self.waypoint)
 		#movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
 		movements = fp.custom_combined_movements() if COMBINED_MOVEMENT else fp.movements
-		print(movements)
 
 		return movements
 

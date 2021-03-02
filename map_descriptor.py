@@ -2,6 +2,7 @@ import math
 from constants import NUM_ROWS, NUM_COLS
 from enums import Cell
 from utils import print_map
+import json
 
 
 # Converts Binary to Hexadecimal
@@ -112,7 +113,11 @@ def generate_map_descriptor_for_android(map_grid):
     explored_str = bin_to_hex(explored_bin)
     obstacle_str = bin_to_hex(obstacle_bin)
 
-    return {"exploredPath": explored_str, "grid": obstacle_str}
+    explored_dic = json.dumps({"exploredPath": explored_str})
+    grid_dic = json.dumps({"grid": obstacle_str})
+
+    return explored_dic, grid_dic
+
 
 def main():
     with open("maps/sample_arena1.txt", "r") as f:
@@ -121,9 +126,8 @@ def main():
     map_grid = generate_map(*arena_map_string_array)
     print(map_grid)
     print(generate_map_descriptor_for_android(map_grid))
-    #print(generate_map_descriptor(map_grid))
+    # print(generate_map_descriptor(map_grid))
     print_map(map_grid)
-
 
 
 if __name__ == "__main__":

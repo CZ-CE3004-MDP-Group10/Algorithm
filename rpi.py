@@ -143,7 +143,16 @@ class RPi:
 
     def send_map(self, explored_map):
         # self.send_msg_with_type(RPi.MDF_MSG, ",".join(generate_map_descriptor(explored_map))
-        self.send_msg_with_type(RPi.MDF_MSG, generate_map_descriptor_for_android(explored_map))
+        explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
+        self.send_msg_with_type(RPi.MDF_MSG, explored_dic + grid_dic)
+
+    def send_obstacle_map(self, explored_map):
+        explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
+        self.send_msg_with_type("AND", grid_dic)
+
+    def send_explored_map(self, explored_map):
+        explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
+        self.send_msg_with_type("AND", explored_dic)
 
     def receive_sensor_values(self, send_msg=True):
         # Sample message: S

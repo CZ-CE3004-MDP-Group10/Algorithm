@@ -47,9 +47,6 @@ class RealRun:
     def connect_to_rpi(self):
         while True:
             msg, msg_type = self.rpi.receive_msg_with_type()
-        # msg_type = RPi.WAYPOINT_MSG
-        # msg = "10,4"
-        # msg_type = RPi.FASTEST_PATH_MSG
 
             if msg_type == RPi.CALIBRATE_MSG:
                 self.calibrate()
@@ -107,21 +104,16 @@ class RealRun:
                 self.rpi.send(RPi.EXPLORE_MSG)
 
             # Waypoint
-            elif msg_type == RPi.WAYPOINT_MSG:
+            elif msg_type[0:3] == RPi.WAYPOINT_MSG:
+                self.rpi.send_obstacle_map(self.explored_map)
+
                 # Sample message: FPW|1,1
-                m = re.match(r"\(?(\d+),\s*(\d+\)?)", msg)
+                waypoint_array = msg_type[4:].split(',')
+                waypointX = waypoint_array[0]
+                waypointY = waypoint_array[1]
+                self.waypoint = (int(waypointX), int(waypointY))
 
-                print("WAY POINT: ")
-                print(m)
-
-                if m is None:
-                    print("Unable to update waypoint")
-
-                self.waypoint = (int(m.group(1)), int(m.group(2)))
                 print("Waypoint:", self.waypoint)
-
-                self.gui.waypoint = self.waypoint
-                self.update_gui()
 
             # Reposition
             elif msg_type == RPi.REPOSITION_MSG:
@@ -149,10 +141,8 @@ class RealRun:
 
             # Fastest Path
             elif msg_type == RPi.FASTEST_PATH_MSG:
-                # self.rpi.send("ARD|F1,L1,R1,F1,R1,L1,F1")
-                #self.rpi.send_map(self.explored_map)
-                self.rpi.send("ARD|F1F1L1F1R1F1F1")
-                """
+                self.rpi.send_obstacle_map(self.explored_map)
+
                 self.is_running = True
 
                 self.rpi.set_speed(is_high=True)
@@ -171,12 +161,9 @@ class RealRun:
                 fp_string = fp.run_fastest_path()
                 self.rpi.send(("ARD|" + fp_string))
 
-                #   time.sleep(4)
-                # self.rpi.send("test")
                 print("FASTEST PATH COMPLETE!")
 
                 self.is_running = False
-                """
 
     def display_gui(self):
         self.gui.start()
