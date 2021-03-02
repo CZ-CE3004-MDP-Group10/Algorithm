@@ -108,6 +108,7 @@ def generate_map_descriptor_for_android(map_grid):
         num_pad_bits = 8 - len(obstacle_bin) % 8
         obstacle_bin += "0" * num_pad_bits
 
+    print(obstacle_bin)
     explored_str = bin_to_hex(explored_bin)
     obstacle_str = bin_to_hex(obstacle_bin)
 

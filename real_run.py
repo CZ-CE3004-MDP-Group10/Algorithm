@@ -149,8 +149,10 @@ class RealRun:
 
             # Fastest Path
             elif msg_type == RPi.FASTEST_PATH_MSG:
-                time.sleep(3)
                 # self.rpi.send("ARD|F1,L1,R1,F1,R1,L1,F1")
+                #self.rpi.send_map(self.explored_map)
+                self.rpi.send("ARD|F1F1L1F1R1F1F1")
+                """
                 self.is_running = True
 
                 self.rpi.set_speed(is_high=True)
@@ -174,6 +176,7 @@ class RealRun:
                 print("FASTEST PATH COMPLETE!")
 
                 self.is_running = False
+                """
 
     def display_gui(self):
         self.gui.start()

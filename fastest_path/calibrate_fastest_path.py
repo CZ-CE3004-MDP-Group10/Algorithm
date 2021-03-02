@@ -39,13 +39,6 @@ class CalibrateFastestPath:
 
 		return movements
 
-		if movements is not None:
-			for movement in movements:
-				self.calibrate()
-				self.steps_without_calibration += 1
-				print("MOVEMENT: ")
-				print(movement)
-				self.robot.move(movement)
 
 
 	def calibrate(self):
