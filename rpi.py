@@ -23,14 +23,14 @@ class RPi:
     # Message Types
     HELLO_MSG = "ARD|F1"
     CALIBRATE_MSG = "C"
-    CALIBRATE_FRONT_MSG = "f"
-    CALIBRATE_RIGHT_MSG = "r"
+    CALIBRATE_FRONT_MSG = "cf"
+    CALIBRATE_RIGHT_MSG = "cr"
     EXPLORE_MSG = "EXP"
     FASTEST_PATH_MSG = "FP"
     WAYPOINT_MSG = "FPW"
     REPOSITION_MSG = "R"
-    SENSE_MSG = "S"
-    TAKE_PHOTO_MSG = "P"
+    SENSE_MSG = "SE"
+    TAKE_PHOTO_MSG = "TP"
     MOVEMENT_MSG = "M"
     MDF_MSG = "D"
     '''
@@ -164,12 +164,11 @@ class RPi:
         while True:
             # Ask for sense message again if it's been too long
             if time.time() - sent_time > 3:
-                #self.send(RPi.SENSE_MSG) #1st March
+                self.send(RPi.SENSE_MSG)
                 sent_time = time.time()
 
             # Sample message: S:1,1,1,1,1,1
             msg_type, msg = self.receive_msg_with_type()
-
             if msg_type == RPi.QUIT_MSG:
                 return []
 
