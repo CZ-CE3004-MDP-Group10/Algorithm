@@ -18,7 +18,7 @@ BUFFER_SIZE = 512;
 
 class RPi:
     HOST = "192.168.10.1"
-    PORT = 101
+    PORT = 30000
 
     # Message Types
     HELLO_MSG = "ARD|F1"

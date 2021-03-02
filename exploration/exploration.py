@@ -427,7 +427,7 @@ class Exploration:
 
 
 def main():
-	with open("../maps/sample_arena5.txt", "r") as f:
+	with open("../maps/sample_arena1.txt", "r") as f:
 		strs = f.read().split("\n")
 
 	map_real = generate_map(*strs)

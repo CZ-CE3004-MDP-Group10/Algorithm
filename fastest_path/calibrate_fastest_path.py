@@ -38,7 +38,7 @@ class CalibrateFastestPath:
 		print(movements)
 
 		return movements
-		"""
+
 		if movements is not None:
 			for movement in movements:
 				self.calibrate()
@@ -46,7 +46,7 @@ class CalibrateFastestPath:
 				print("MOVEMENT: ")
 				print(movement)
 				self.robot.move(movement)
-		"""
+
 
 	def calibrate(self):
 		front_direction = self.robot.direction
