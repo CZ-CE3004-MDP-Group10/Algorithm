@@ -21,6 +21,7 @@ class CalibrateFastestPath:
 			coverage_limit (int): Coverage limit as a % (e.g. 100 means 100%).
 			time_limit (int): Time limit in seconds.
 		"""
+
         self.robot = robot
         self.prev_pos = None
         self.explored_map = explored_map if explored_map is not None else generate_unexplored_map()

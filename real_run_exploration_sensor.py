@@ -15,7 +15,7 @@ import time
 import re
 
 # Set to True for complete image recognition exploration
-USE_COMPLETE_IMAGE_REC_EXPLORATION = False
+USE_COMPLETE_IMAGE_REC_EXPLORATION = True
 
 
 class RealRun:
@@ -56,45 +56,35 @@ class RealRun:
             self.gui.map = self.explored_map
             self.on_update()
 
-            self.exp = Exploration(
-                robot=self.robot,
-                on_update_map=self.on_update,
-                on_calibrate=self.rpi.calibrate,
-                explored_map=self.explored_map,
-                time_limit=350
-            )
+            if USE_COMPLETE_IMAGE_REC_EXPLORATION:
+                self.exp = CompleteImageRecExploration(
+                    robot=self.robot,
+                    on_update_map=self.on_update,
+                    on_calibrate=self.rpi.calibrate,
+                    on_take_photo=self.rpi.take_photo,
+                    explored_map=self.explored_map,
+                    time_limit=350
+                )
+            else:
+                self.exp = ShortImageRecExploration(
+                    robot=self.robot,
+                    on_update_map=self.on_update,
+                    on_calibrate=self.rpi.calibrate,
+                    on_take_photo=self.rpi.take_photo,
+                    explored_map=self.explored_map,
+                    time_limit=350
+                )
 
-            self.exp.run_exploration()
+            c, r = self.robot.pos
+            for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
+                for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
+                    self.exp.explored_map[i][j] = Cell.FREE
 
-            """
-                if USE_COMPLETE_IMAGE_REC_EXPLORATION:
-                    self.exp = CompleteImageRecExploration(
-                        robot=self.robot,
-                        on_update_map=self.on_update,
-                        on_calibrate=self.rpi.calibrate,
-                        on_take_photo=self.rpi.take_photo,
-                        explored_map=self.explored_map,
-                        time_limit=350
-                    )
-                else:
-                    self.exp = ShortImageRecExploration(
-                        robot=self.robot,
-                        on_update_map=self.on_update,
-                        on_calibrate=self.rpi.calibrate,
-                        on_take_photo=self.rpi.take_photo,
-                        explored_map=self.explored_map,
-                        time_limit=350
-                    )
+            print(self.explored_map)
+            self.update_gui()
 
-                c, r = self.robot.pos
-                for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
-                    for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
-                        self.exp.explored_map[i][j] = Cell.FREE
-
-                self.update_gui()
-                """
             # Run exploration
-            # self.exp.run_exploration()
+            self.exp.run_exploration()
 
             # Prepare robot position for fastest path
             """
@@ -184,7 +174,6 @@ class RealRun:
 
     def on_update(self):
         self.rpi.send_explored_map(self.explored_map)
-        self.rpi.send_obstacle_map(self.explored_map)
         self.update_gui()
 
     def calibrate(self):

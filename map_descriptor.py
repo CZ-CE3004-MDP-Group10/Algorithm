@@ -124,7 +124,7 @@ def main():
         arena_map_string_array = f.read().split("\n")
 
     map_grid = generate_map(*arena_map_string_array)
-    print(map_grid)
+    #print(map_grid)
     print(generate_map_descriptor_for_android(map_grid))
     # print(generate_map_descriptor(map_grid))
     print_map(map_grid)

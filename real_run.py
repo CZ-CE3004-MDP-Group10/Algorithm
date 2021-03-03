@@ -22,7 +22,7 @@ class RealRun:
         self.rpi = RPi(on_quit=self.on_quit)
         self.robot = RealBot(
             pos=START_POS,
-            direction=Direction.NORTH,
+            direction=Direction.EAST,
             on_move=self.on_move,
             get_sensor_values=self.rpi.receive_sensor_values,
         )

@@ -70,6 +70,7 @@ class FastestPath:
         Returns:
             steps (list): List of positions to move directly between to execute the path.
         """
+
         nodes = [source]
         g = [0]  # Cost
         h = [FastestPath.heuristic_function(source, dest)]
@@ -175,10 +176,10 @@ class FastestPath:
         for r in range(0, NUM_ROWS):
             for c in range(0, NUM_COLS):
                 if map_real[r][c] != Cell.FREE:
-                    for y in range(max(r - 1, 0), min(r + 2, NUM_ROWS)):
-                        for x in range(max(c - 1, 0), min(c + 2, NUM_COLS)):
+                    for y in range(max(r - 1, 0), min(r + 2, NUM_ROWS)):  # for y in range(max(r - 1, 0), min(r + 2, NUM_ROWS)):
+                        for x in range(max(c - 1, 0), min(c + 2, NUM_COLS)):  # for x in range(max(c - 1, 0), min(c + 2, NUM_COLS)):
                             map_virtual[y][x] = Cell.OBSTACLE
-
+        #print_map(map_virtual)
         return map_virtual
 
     @staticmethod
@@ -231,6 +232,7 @@ class FastestPath:
         robot_direction = direction
 
         for i in range(1, len(steps)):
+
             # Determine move direction
             start_pos = steps[i - 1]
             end_pos = steps[i]

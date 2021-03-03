@@ -23,13 +23,13 @@ class RPi:
     # Message Types
     HELLO_MSG = "ARD|F1"
     CALIBRATE_MSG = "C"
-    CALIBRATE_FRONT_MSG = "cf"
-    CALIBRATE_RIGHT_MSG = "cr"
+    CALIBRATE_FRONT_MSG = "ARD|CF"
+    CALIBRATE_RIGHT_MSG = "ARD|CR"
     EXPLORE_MSG = "EXP"
     FASTEST_PATH_MSG = "FP"
     WAYPOINT_MSG = "FPW"
     REPOSITION_MSG = "R"
-    SENSE_MSG = "SE"
+    SENSE_MSG = "ARD|SE"
     TAKE_PHOTO_MSG = "TP"
     MOVEMENT_MSG = "M"
     MDF_MSG = "D"
@@ -48,7 +48,7 @@ class RPi:
 
     def open_connection(self):
         try:
-            self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#socket.SOCK_DGRAM)
+            self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket.SOCK_DGRAM)
             self.conn.connect((RPi.HOST, RPi.PORT))
             self.is_connected = True
             print("Successfully established connection...")
@@ -124,7 +124,7 @@ class RPi:
             movement_str = Movement.convert_to_string(movement)
         else:
             movement_str = str(movement)
-        #F1,L1,R1,B1
+        # F1,L1,R1,B1
         # Sample message: M:R 1,2 E
         """
         msg = "{} {},{} {}".format(
@@ -137,9 +137,9 @@ class RPi:
         msg = "{}".format(
             movement_str
         )
-        #self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
+        # self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
         self.send_msg_with_type("ARD", msg)
-        #return self.receive_sensor_values(send_msg=False)
+        # return self.receive_sensor_values(send_msg=False)
 
     def send_map(self, explored_map):
         # self.send_msg_with_type(RPi.MDF_MSG, ",".join(generate_map_descriptor(explored_map))
@@ -163,19 +163,22 @@ class RPi:
 
         while True:
             # Ask for sense message again if it's been too long
-            if time.time() - sent_time > 3:
+            if time.time() - sent_time > 2:
                 self.send(RPi.SENSE_MSG)
                 sent_time = time.time()
 
             # Sample message: S:1,1,1,1,1,1
             msg_type, msg = self.receive_msg_with_type()
+
             if msg_type == RPi.QUIT_MSG:
                 return []
 
-            if msg_type != RPi.SENSE_MSG:
+            m = re.match(r"(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)", msg)
+
+            if not bool(m):
                 continue
 
-            m = re.match(r"(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)", msg)
+            print("sensor message", m)
 
             if m is None:
                 print("Unable to receive sensor input")
@@ -214,7 +217,7 @@ class RPi:
 
         while True:
             # Ask for calibrate message again if it's been too long
-            if time.time() - sent_time > 3:
+            if time.time() - sent_time > 2:
                 self.send(calibrate_msg)
                 sent_time = time.time()
 
@@ -224,14 +227,15 @@ class RPi:
             if msg_type == RPi.QUIT_MSG:
                 break
 
-            if msg_type == calibrate_msg:
-                print("Calibration successful")
-                break
+            if msg_type == "ALG":
+                if msg == calibrate_msg[4:]:
+                    print("Calibration successful")
+                    break
 
     def set_speed(self, is_high=True):
         # Sample message: H
-        #speed_msg = RPi.HIGH_SPEED_MSG if is_high else RPi.LOW_SPEED_MSG
-        #self.send(speed_msg)
+        # speed_msg = RPi.HIGH_SPEED_MSG if is_high else RPi.LOW_SPEED_MSG
+        # self.send(speed_msg)
         pass
 
     def receive_endlessly(self):
@@ -246,7 +250,7 @@ def main():
     rpi.send("ALG|Hello there FROM ALGO TEAM!!!!")
     msg = rpi.receive()
     print(msg)
-    #rpi.close_connection()
+    # rpi.close_connection()
 
 
 if __name__ == '__main__':
