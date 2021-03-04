@@ -67,7 +67,7 @@ class CalibrateFastestPath:
                 forward_count = 0
                 new_str_movements.append(move)
             
-
+        
         if forward_count != 0:
             new_str_movements.append("F{}".format(forward_count))   
             
