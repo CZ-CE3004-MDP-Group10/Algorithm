@@ -53,19 +53,19 @@ class CalibrateFastestPath:
 
         for move in str_movements:
     
-            if movement == "F1":
+            if move == "F1":
                 forward_count += 1
 
-            if forward_count == 5:
-                new_str_movements.append("F5")
+                if forward_count == 5:
+                    new_str_movements.append("F5")
+                    forward_count = 0
+
+            else:
+                if forward_count != 0:
+                    new_str_movements.append("F{}".format(forward_count))
+
                 forward_count = 0
-
-        else:
-            if forward_count != 0:
-                new_str_movements.append("F{}".format(forward_count))
-
-            forward_count = 0
-            new_str_movements.append(move)
+                new_str_movements.append(move)
             
 
         if forward_count != 0:
