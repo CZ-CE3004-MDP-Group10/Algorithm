@@ -39,18 +39,19 @@ class CalibrateFastestPath:
         # movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
         str_movements=[]
         movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
-        for movement in movements:
-            #index=0
-            cal=self.calibrate()
-            for j in range(len(cal)):
-                str_movements.append(cal[j])
-            self.steps_without_calibration += 1
-            if isinstance(movement,int):
-                full_forwardmove="F"+str(movement)
-                str_movements.append(full_forwardmove)
-            else:
-                str_movements.append(Movement.convert_to_string(movement))
-            self.robot.movefp(movement)
+        if movements is not None:
+            for movement in movements:
+                #index=0
+                cal=self.calibrate()
+                for j in range(len(cal)):
+                    str_movements.append(cal[j])
+                self.steps_without_calibration += 1
+                if isinstance(movement,int):
+                    full_forwardmove="F"+str(movement)
+                    str_movements.append(full_forwardmove)
+                else:
+                    str_movements.append(Movement.convert_to_string(movement))
+                self.robot.movefp(movement)
           
         print("The list of all the moves is",str_movements)   
         # Testing
