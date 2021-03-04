@@ -279,7 +279,7 @@ class FastestPath:
             if movement == Movement.FORWARD:
                 forward_count += 1
 
-                if forward_count == 9:
+                if forward_count == 5:
                     combined_movement_list.append(forward_count)
                     forward_count = 0
 

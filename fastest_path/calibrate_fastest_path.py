@@ -45,32 +45,14 @@ class CalibrateFastestPath:
             for j in range(len(cal)):
                 str_movements.append(cal[j])
             self.steps_without_calibration += 1
-            str_movements.append(Movement.convert_to_string(movement))
-            self.robot.movefp(movement)
-        
-        new_str_movements=[]
-        forward_count=0
-
-        for move in str_movements:
-    
-            if move == "F1":
-                forward_count += 1
-
-                if forward_count == 5:
-                    new_str_movements.append("F5")
-                    forward_count = 0
-
+            if isinstance(movement,int):
+                full_forwardmove="F"+str(movement)
+                str_movements.append(full_forwardmove)
             else:
-                if forward_count != 0:
-                    new_str_movements.append("F{}".format(forward_count))
-
-                forward_count = 0
-                new_str_movements.append(move)
-            
-        
-        if forward_count != 0:
-            new_str_movements.append("F{}".format(forward_count))   
-            
+                str_movements.append(Movement.convert_to_string(movement))
+            self.robot.movefp(movement)
+          
+        print("The list of all the moves is",str_movements)   
         # Testing
 
         # if movements is not None:
@@ -79,7 +61,7 @@ class CalibrateFastestPath:
         #         self.steps_without_calibration += 1
         #         self.robot.move(movement)
         
-        fastest_path=''.join(new_str_movements)
+        fastest_path=''.join(str_movements)
         return fastest_path
 
     def calibrate(self):
