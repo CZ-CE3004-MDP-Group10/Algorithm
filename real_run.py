@@ -48,7 +48,6 @@ class RealRun:
         while True:
             msg, msg_type = self.rpi.receive_msg_with_type()
 
-            msg_type = RPi.FASTEST_PATH_MSG
             if msg_type == RPi.CALIBRATE_MSG:
                 self.calibrate()
             
