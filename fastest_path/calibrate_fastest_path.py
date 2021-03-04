@@ -1,4 +1,4 @@
-from enums import Cell, Direction
+from enums import Cell, Direction, Movement
 from utils import print_map, generate_unexplored_map
 from map_descriptor import generate_map
 from constants import START_POS, GOAL_POS, NUM_ROWS, NUM_COLS
@@ -37,18 +37,53 @@ class CalibrateFastestPath:
     def run_fastest_path(self):
         fp = FastestPath(self.explored_map, self.robot.direction, START_POS, GOAL_POS, self.waypoint)
         # movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
-        movements = fp.custom_combined_movements() if COMBINED_MOVEMENT else fp.movements
+        str_movements=[]
+        movements = fp.combined_movements() if COMBINED_MOVEMENT else fp.movements
+        for movement in movements:
+            #index=0
+            cal=self.calibrate()
+            for j in range(len(cal)):
+                str_movements.append(cal[j])
+            self.steps_without_calibration += 1
+            str_movements.append(Movement.convert_to_string(movement))
+            self.robot.movefp(movement)
+        
+        new_str_movements=[]
+        forward_count=0
 
+        for move in str_movements:
+    
+            if movement == "F1":
+                forward_count += 1
+
+            if forward_count == 5:
+                new_str_movements.append("F5")
+                forward_count = 0
+
+        else:
+            if forward_count != 0:
+                new_str_movements.append("F{}".format(forward_count))
+
+            forward_count = 0
+            new_str_movements.append(move)
+            
+
+        if forward_count != 0:
+            new_str_movements.append("F{}".format(forward_count))   
+            
         # Testing
-        # if movements is not None:
-        #    for movement in movements:
-        #        self.calibrate()
-        #        self.steps_without_calibration += 1
-        #        self.robot.move(movement)
 
-        return movements
+        # if movements is not None:
+        #     for movement in movements:
+        #         self.calibrate()
+        #         self.steps_without_calibration += 1
+        #         self.robot.move(movement)
+        
+        fastest_path=''.join(new_str_movements)
+        return fastest_path
 
     def calibrate(self):
+        commands=[]
         front_direction = self.robot.direction
         right_direction = (front_direction + 1) % 4
         front_direction_vector = Direction.get_direction_vector(front_direction)
@@ -65,7 +100,8 @@ class CalibrateFastestPath:
                 break
 
         if can_calibrate_front:
-            self.on_calibrate(is_front=True)
+            #self.on_calibrate(is_front=True)
+            commands.append("CF")
 
         # Check right
         if self.steps_without_calibration >= MIN_STEPS_WITHOUT_CALIBRATION:
@@ -78,8 +114,11 @@ class CalibrateFastestPath:
                     can_calibrate_right = False
 
             if can_calibrate_right:
-                self.on_calibrate(is_front=False)
+                #self.on_calibrate(is_front=False)
+                commands.append("CR")
                 self.steps_without_calibration = 0
+
+        return commands
 
 
 def main():

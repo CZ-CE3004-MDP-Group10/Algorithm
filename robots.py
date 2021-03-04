@@ -66,9 +66,49 @@ class Robot:
 			self.direction = Direction((self.direction - 1) % 4)
 
 		return self.on_move(movement)
+		
+	def movefp(self, movement, sense=False):
+		if not isinstance(movement, Movement):
+			if self.direction == Direction.NORTH:
+				self.pos = (self.pos[0], self.pos[1] + movement)
+			elif self.direction == Direction.EAST:
+				self.pos = (self.pos[0] + movement, self.pos[1])
+			elif self.direction == Direction.SOUTH:
+				self.pos = (self.pos[0], self.pos[1] - movement)
+			elif self.direction == Direction.WEST:
+				self.pos = (self.pos[0] - movement, self.pos[1])
+
+		elif movement == Movement.FORWARD:
+			if self.direction == Direction.NORTH:
+				self.pos = (self.pos[0], self.pos[1] + 1)
+			elif self.direction == Direction.EAST:
+				self.pos = (self.pos[0] + 1, self.pos[1])
+			elif self.direction == Direction.SOUTH:
+				self.pos = (self.pos[0], self.pos[1] - 1)
+			elif self.direction == Direction.WEST:
+				self.pos = (self.pos[0] - 1, self.pos[1])
+
+		elif movement == Movement.BACKWARD:
+			if self.direction == Direction.NORTH:
+				self.pos = (self.pos[0], self.pos[1] - 1)
+			elif self.direction == Direction.EAST:
+				self.pos = (self.pos[0] - 1, self.pos[1])
+			elif self.direction == Direction.SOUTH:
+				self.pos = (self.pos[0], self.pos[1] + 1)
+			elif self.direction == Direction.WEST:
+				self.pos = (self.pos[0] + 1, self.pos[1])
+
+		elif movement == Movement.RIGHT:
+			self.direction = Direction((self.direction + 1) % 4)
+
+		elif movement == Movement.LEFT:
+			self.direction = Direction((self.direction - 1) % 4)
 
 	def sense(self):
 		pass
+
+
+
 
 
 class RealBot(Robot):
