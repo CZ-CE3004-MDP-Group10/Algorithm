@@ -7,7 +7,7 @@ from .fastest_path import FastestPath
 import time
 
 COMBINED_MOVEMENT = True
-MIN_STEPS_WITHOUT_CALIBRATION = 1000
+MIN_STEPS_WITHOUT_CALIBRATION = 0
 
 
 class CalibrateFastestPath:
