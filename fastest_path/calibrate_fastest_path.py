@@ -46,11 +46,11 @@ class CalibrateFastestPath:
                 for j in range(len(cal)):
                     str_movements.append(cal[j])
                 self.steps_without_calibration += 1
-                if isinstance(movement,int):
+                if isinstance(movement,Movement):
+                    str_movements.append(Movement.convert_to_string(movement))
+                elif isinstance(movement,int):
                     full_forwardmove="F"+str(movement)
                     str_movements.append(full_forwardmove)
-                else:
-                    str_movements.append(Movement.convert_to_string(movement))
                 self.robot.movefp(movement)
           
         print("The list of all the moves is",str_movements)   
