@@ -114,7 +114,7 @@ class RPi:
 
     def ping(self):
         # Sample message: HELLO
-        self.send("ARD|F1")
+        self.send("ARD|B1")
 
     def send_movement(self, movement, robot):
         print(movement)
