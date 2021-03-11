@@ -414,7 +414,6 @@ class Exploration:
 
                     if 0 <= pos_to_mark[0] <= NUM_COLS - 1 and 0 <= pos_to_mark[1] <= NUM_ROWS - 1:
                         self.explored_map[pos_to_mark[1]][pos_to_mark[0]] = Cell.FREE
-                        print("Exploration: No Obstacle Found at Row: ", pos_to_mark[1], ", Column: ", pos_to_mark[0])
 
             else:  # sensor value picked up something, obstacle in front
                 for j in range(sensor.get_range()[0], min(sensor.get_range()[1], sensor_value + 1)):
@@ -425,7 +424,6 @@ class Exploration:
                     if 0 <= pos_to_mark[0] <= NUM_COLS - 1 and 0 <= pos_to_mark[1] <= NUM_ROWS - 1:
                         self.explored_map[pos_to_mark[1]][
                             pos_to_mark[0]] = Cell.FREE if j != sensor_value else Cell.OBSTACLE
-                        print("Exploration: Obstacle Found at Row: ", pos_to_mark[1], ", Column: ", pos_to_mark[0])
 
         for r in range(START_POS[1] - 1, START_POS[1] + 2):
             for c in range(START_POS[0] - 1, START_POS[0] + 2):

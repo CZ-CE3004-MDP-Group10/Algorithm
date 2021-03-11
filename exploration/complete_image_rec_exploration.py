@@ -109,7 +109,7 @@ class CompleteImageRecExploration(Exploration):
         if len(obstacles) != 0:
             for i in obstacles:
                 self.obstacles[i].remove((right + 2) % 4)
-            self.on_take_photo(obstacles)
+            self.on_take_photo(obstacles, self.robot)
             print('right take photo')
 
         # if front got obstacles with sides never see before, turn and take photo
@@ -119,7 +119,7 @@ class CompleteImageRecExploration(Exploration):
             for i in obstacles:
                 self.obstacles[i].remove((direction + 2) % 4)
             self.move(Movement.LEFT)
-            self.on_take_photo(obstacles)
+            self.on_take_photo(obstacles, self.robot)
             print('front take photo')
             has_front = True
 
@@ -134,7 +134,7 @@ class CompleteImageRecExploration(Exploration):
             if not has_front:
                 self.move(Movement.LEFT)
             self.move(Movement.LEFT)
-            self.on_take_photo(obstacles)
+            self.on_take_photo(obstacles, self.robot)
             print('left take photo')
             has_left = True
         elif has_front:
@@ -152,7 +152,7 @@ class CompleteImageRecExploration(Exploration):
             else:
                 self.move(Movement.LEFT)
             print('back take photo')
-            self.on_take_photo(obstacles)
+            self.on_take_photo(obstacles, self.robot)
             self.move(Movement.LEFT)
 
         elif has_left:

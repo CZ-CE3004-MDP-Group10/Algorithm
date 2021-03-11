@@ -15,7 +15,7 @@ from exploration.complete_image_rec_exploration import CompleteImageRecExplorati
 
 class GUI:
     # Size
-    CELL_SIZE = 25 #40
+    CELL_SIZE = 25  # 40
 
     # Colours
     BLACK = "#2E3134"
@@ -30,7 +30,7 @@ class GUI:
     MAP_TAG_0 = "map0"
     MAP_TAG_1 = "map2"
     ROBOT_TAG = "rob1t"
-    
+
     def __init__(self, explored_map, robot):
         self.map_tag = True
         self.root = None
@@ -55,7 +55,7 @@ class GUI:
         self.canvas = tk.Canvas(self.root, height=NUM_ROWS * GUI.CELL_SIZE, width=NUM_COLS * GUI.CELL_SIZE, bg='white')
         self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=0, pady=20)
 
-        #self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=20, pady=20)
+        # self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=20, pady=20)
         self.update_map()
         self.update_robot()
 
@@ -166,7 +166,7 @@ class SimulatorGUI(GUI):
     MAX_SPEED = 20
 
     def __init__(self):
-        with open("maps/sample_arena1.txt", "r") as f:
+        with open("maps/fastest_path_arena.txt", "r") as f:
             strs = f.read().split("\n")
 
         self.selected_map = generate_map(*strs)
@@ -197,13 +197,13 @@ class SimulatorGUI(GUI):
         self.robot_speed = None
 
     def display_side_panel(self):
-        
+
         side_panel = tk.Frame(self.root)
-        left_sidepanel=tk.Frame(side_panel)
-        left_sidepanel.pack(side=LEFT,padx=(18,10))
-        right_sidepanel=tk.Frame(side_panel)
-        right_sidepanel.pack(side=RIGHT,padx=(10,18))
-        
+        left_sidepanel = tk.Frame(side_panel)
+        left_sidepanel.pack(side=LEFT, padx=(18, 10))
+        right_sidepanel = tk.Frame(side_panel)
+        right_sidepanel.pack(side=RIGHT, padx=(10, 18))
+
         side_panel.pack(side=tk.LEFT, padx=0, pady=20)
 
         # Error Frame
@@ -228,7 +228,7 @@ class SimulatorGUI(GUI):
         # Map Select Frame
         map_select_frame = tk.Frame(left_sidepanel)
 
-        #map_select_frame = tk.Frame(side_panel)
+        # map_select_frame = tk.Frame(side_panel)
         map_select_frame.pack(fill=tk.X, pady=10)
 
         self.create_heading(map_select_frame, "Select Map").pack(fill=tk.X)
@@ -242,7 +242,7 @@ class SimulatorGUI(GUI):
         self.mdf_input = tk.Entry(map_select_frame)
         self.mdf_input.pack(fill=tk.X)
 
-        self.create_button(map_select_frame, "Load Map", lambda: self.execute_thread(self.load_map))\
+        self.create_button(map_select_frame, "Load Map", lambda: self.execute_thread(self.load_map)) \
             .pack(fill=tk.X)
 
         # Exploration Frame
@@ -284,13 +284,13 @@ class SimulatorGUI(GUI):
         tk.Label(waypoint_frame, text="X").pack(side=tk.LEFT)
         self.waypoint_x_input = tk.IntVar()
         self.waypoint_x_input.set(GOAL_POS[0])
-        tk.Spinbox(waypoint_frame, from_=0, to=NUM_COLS - 1, textvariable=self.waypoint_x_input)\
+        tk.Spinbox(waypoint_frame, from_=0, to=NUM_COLS - 1, textvariable=self.waypoint_x_input) \
             .pack(fill=tk.X, side=tk.LEFT)
 
         tk.Label(waypoint_frame, text="Y").pack(side=tk.LEFT)
         self.waypoint_y_input = tk.IntVar()
         self.waypoint_y_input.set(GOAL_POS[1])
-        tk.Spinbox(waypoint_frame, from_=0, to=NUM_ROWS - 1, textvariable=self.waypoint_y_input)\
+        tk.Spinbox(waypoint_frame, from_=0, to=NUM_ROWS - 1, textvariable=self.waypoint_y_input) \
             .pack(fill=tk.X, side=tk.LEFT)
 
         # Speed Setting
@@ -301,7 +301,7 @@ class SimulatorGUI(GUI):
 
         self.robot_speed = tk.IntVar()
         self.robot_speed.set(5)
-        tk.Spinbox(speed_frame, from_=SimulatorGUI.MIN_SPEED, to=SimulatorGUI.MAX_SPEED, textvariable=self.robot_speed)\
+        tk.Spinbox(speed_frame, from_=SimulatorGUI.MIN_SPEED, to=SimulatorGUI.MAX_SPEED, textvariable=self.robot_speed) \
             .pack(fill=tk.X)
         self.create_button(speed_frame, "Update Speed", self.update_speed).pack(fill=tk.X)
 
@@ -369,10 +369,10 @@ class SimulatorGUI(GUI):
 
     def update_canvas(self):
         super(SimulatorGUI, self).update_canvas()
-        self.exploration_coverage.set("Coverage: {:.2f}%".format(self.exp.coverage * 100))
-        time_elapsed = round(self.exp.time_elapsed)
+        #self.exploration_coverage.set("Coverage: {:.2f}%".format(self.exp.coverage * 100))
+        #time_elapsed = round(self.exp.time_elapsed)
 
-        self.exploration_time.set("Time: {:02}:{:02}".format(time_elapsed // 60, time_elapsed % 60))
+        #self.exploration_time.set("Time: {:02}:{:02}".format(time_elapsed // 60, time_elapsed % 60))
 
     def fastest_path(self):
         self.is_running = True

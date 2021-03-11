@@ -93,7 +93,6 @@ class RPi:
 
     def receive_msg_with_type(self):
         if len(self.queue) < 1:
-            time.sleep(0.01)
             return "", ""
 
         full_msg = self.queue.popleft()
@@ -148,6 +147,7 @@ class RPi:
 
     def send_obstacle_map(self, explored_map):
         explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
+        print("=====GRID======: ", grid_dic)
         self.send_msg_with_type("AND", grid_dic)
 
     def send_explored_map(self, explored_map):
@@ -178,7 +178,6 @@ class RPi:
             m = re.match(r"(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)", msg)
 
             if not bool(m):
-                #time.sleep(3)
                 continue
 
             print("sensor message", m)
@@ -202,15 +201,17 @@ class RPi:
                 return sensor_values
 
     def take_photo(self, obstacles, robot=None):
-        # Sample message: P:7,2,1
+        # Sample message: CV|7,2,1
         if len(obstacles) != 0:
-            msg = "Y {},{},{}".format(*(obstacles[0]))
-        elif robot is not None:
-            msg = "N {},{},{}".format(*robot.pos, int(robot.direction))
+            msg = "({},{})".format(*(obstacles[0]))
+        #elif robot is not None:
+        #    msg = "N {},{},{}".format(*robot.pos, int(robot.direction))
         else:
             return
 
-        self.send_msg_with_type(RPi.TAKE_PHOTO_MSG, msg)
+        print("Take photo", msg)
+
+        self.send_msg_with_type("CV", msg)
 
     def calibrate(self, is_front=True):
         # Sample message: f
@@ -219,12 +220,10 @@ class RPi:
         sent_time = time.time()
 
         while True:
-            '''
             # Ask for calibrate message again if it's been too long
-            if time.time() - sent_time > 2:
+            if time.time() - sent_time > 1:
                 self.send(calibrate_msg)
                 sent_time = time.time()
-            '''
 
             # Sample message: f
             msg_type, msg = self.receive_msg_with_type()
@@ -236,7 +235,6 @@ class RPi:
                 if msg == calibrate_msg[4:]:
                     print("Calibration successful")
                     break
-            #time.sleep(3)
 
     def set_speed(self, is_high=True):
         # Sample message: H

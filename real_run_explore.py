@@ -51,7 +51,7 @@ class RealRun:
         # Exploration
         elif msg_type == RPi.EXPLORE_MSG:
             self.is_running = True
-            self.rpi.set_speed(is_high=False)
+            self.rpi.set_speed(is_high=True)
             self.explored_map = generate_unexplored_map()
             self.gui.map = self.explored_map
             self.on_update()
@@ -112,6 +112,7 @@ class RealRun:
         # Waypoint
         elif msg_type[0:3] == RPi.WAYPOINT_MSG:
             self.rpi.send_obstacle_map(self.explored_map)
+
 
             # Sample message: FPW|1,1
             waypoint_array = msg_type[4:].split(',')
@@ -183,8 +184,6 @@ class RealRun:
         return sensor_values
 
     def on_update(self):
-        self.rpi.send_explored_map(self.explored_map)
-        self.rpi.send_obstacle_map(self.explored_map)
         self.update_gui()
 
     def calibrate(self):
