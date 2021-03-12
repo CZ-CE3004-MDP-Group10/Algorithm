@@ -163,7 +163,7 @@ class RPi:
             msg_type, msg = self.receive_msg_with_type()
             print("The message is (should be DMV)",msg)
             print("IM STILL WAITING!!!!!")
-            if msg == "DMV" or msg == "Robot Ready." or msg=="CR" or msg=="CF":
+            if msg == "DMV" or msg == "Robot Ready.":
                 print("I SEND MSG NOW",msg)
                 self.send(RPi.SENSE_MSG)
                 break
