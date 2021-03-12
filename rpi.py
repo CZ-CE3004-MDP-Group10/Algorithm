@@ -138,7 +138,8 @@ class RPi:
         )
         # self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
         self.send_msg_with_type("ARD", msg)
-        # return self.receive_sensor_values(send_msg=False)
+        # Might remove below, need to test
+        return self.receive_sensor_values(send_msg=True)
 
     def send_map(self, explored_map):
         # self.send_msg_with_type(RPi.MDF_MSG, ",".join(generate_map_descriptor(explored_map))
@@ -157,25 +158,28 @@ class RPi:
     def receive_sensor_values(self, send_msg=True):
         # Sample message: S
 
-        """
+        
         while True:
             msg_type, msg = self.receive_msg_with_type()
-            if msg == "DMV":
+            print("The message is (should be DMV)",msg)
+            print("IM STILL WAITING!!!!!")
+            if msg == "DMV" or msg == "Robot Ready." or msg=="CR" or msg=="CF":
+                print("I SEND MSG NOW",msg)
                 self.send(RPi.SENSE_MSG)
                 break
-        """
-        if send_msg:
-            self.send(RPi.SENSE_MSG)
+        
+        #if send_msg:
+        #    self.send(RPi.SENSE_MSG)
 
         sent_time = time.time()
 
         while True:
             # Ask for sense message again if it's been too long
-
+            '''
             if time.time() - sent_time > 3:
                 self.send(RPi.SENSE_MSG)
                 sent_time = time.time()
-
+            '''
             # Sample message: S:1,1,1,1,1,1
             msg_type, msg = self.receive_msg_with_type()
 
@@ -228,10 +232,11 @@ class RPi:
 
         while True:
             # Ask for calibrate message again if it's been too long
+            '''
             if time.time() - sent_time > 3:
                 self.send(calibrate_msg)
                 sent_time = time.time()
-
+            '''
             # Sample message: f
             msg_type, msg = self.receive_msg_with_type()
 
