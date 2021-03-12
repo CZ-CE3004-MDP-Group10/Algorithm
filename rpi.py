@@ -160,7 +160,7 @@ class RPi:
         """
         while True:
             msg_type, msg = self.receive_msg_with_type()
-            if msg == "DMV":
+            if msg == "DMV" or msg=="Robot Ready." or msg=="CR" or msg=="CF":
                 self.send(RPi.SENSE_MSG)
                 break
         """
@@ -228,10 +228,11 @@ class RPi:
 
         while True:
             # Ask for calibrate message again if it's been too long
+            ## Could comment out if block below
             if time.time() - sent_time > 3:
                 self.send(calibrate_msg)
                 sent_time = time.time()
-
+            
             # Sample message: f
             msg_type, msg = self.receive_msg_with_type()
 
