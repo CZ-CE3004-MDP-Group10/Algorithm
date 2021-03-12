@@ -164,8 +164,11 @@ class RealRun:
         return sensor_values
 
     def on_update(self):
-        self.rpi.send_explored_map(self.explored_map)
         self.update_gui()
+
+        # self.rpi.send_explored_map(self.explored_map)
+        self.rpi.send_obstacle_map(self.explored_map)
+        time.sleep(0.5)
 
     def calibrate(self):
         if self.robot.direction == Direction.NORTH:

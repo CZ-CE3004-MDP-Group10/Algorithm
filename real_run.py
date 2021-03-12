@@ -45,48 +45,52 @@ class RealRun:
         self.rpi.receive_endlessly()
 
     def connect_to_rpi(self):
-        while True:
-            msg, msg_type = self.rpi.receive_msg_with_type()
+        #msg, msg_type = self.rpi.receive_msg_with_type()
 
-            # Waypoint
-            if msg_type[0:3] == RPi.WAYPOINT_MSG:
-                print(self.explored_map)
-                self.rpi.send_obstacle_map(self.explored_map)
+        msg_type = RPi.FASTEST_PATH_MSG
 
-                # Sample message: FPW|1,1
-                waypoint_array = msg_type[4:].split(',')
-                waypointX = waypoint_array[0]
-                waypointY = waypoint_array[1]
-                self.waypoint = (int(waypointX), int(waypointY))
 
-                print("Waypoint:", self.waypoint)
+        # Waypoint
+        if msg_type[0:3] == RPi.WAYPOINT_MSG:
+            print(self.explored_map)
+            self.rpi.send_obstacle_map(self.explored_map)
 
-            # Fastest Path
-            elif msg_type == RPi.FASTEST_PATH_MSG:
-                self.rpi.send_obstacle_map(self.explored_map)
-                self.robot.direction = Direction.EAST
+            # Sample message: FPW|1,1
+            waypoint_array = msg_type[4:].split(',')
+            waypointX = waypoint_array[0]
+            waypointY = waypoint_array[1]
+            self.waypoint = (int(waypointX), int(waypointY))
 
-                self.is_running = True
+            print("Waypoint:", self.waypoint)
 
-                self.rpi.set_speed(is_high=True)
+        # Fastest Path
+        elif msg_type == RPi.FASTEST_PATH_MSG:
+            """
+            self.robot.direction = Direction.EAST
+            self.rpi.send_obstacle_map(self.explored_map)
 
-                self.robot.pos = START_POS
-                self.update_gui()
+            self.is_running = True
 
-                fp = CalibrateFastestPath(
-                    robot=self.robot,
-                    on_calibrate=self.rpi.calibrate,
-                    explored_map=self.explored_map,
-                    waypoint=self.waypoint
-                )
+            self.rpi.set_speed(is_high=True)
 
-                # Run fastest path
-                fp_string = fp.run_fastest_path()
-                self.rpi.send(("ARD|" + fp_string))
+            self.robot.pos = START_POS
+            self.update_gui()
 
-                print("FASTEST PATH COMPLETE!")
+            fp = CalibrateFastestPath(
+                robot=self.robot,
+                on_calibrate=self.rpi.calibrate,
+                explored_map=self.explored_map,
+                waypoint=self.waypoint
+            )
 
-                self.is_running = False
+            # Run fastest path
+            fp_string = fp.run_fastest_path()
+            self.rpi.send(("ARD|" + fp_string))
+
+            print("FASTEST PATH COMPLETE!")
+
+            self.is_running = False
+            """
 
     def display_gui(self):
         self.gui.start()

@@ -156,6 +156,13 @@ class RPi:
 
     def receive_sensor_values(self, send_msg=True):
         # Sample message: S
+        """
+        while True:
+            msg_type, msg = self.receive_msg_with_type()
+            if msg == "DMV":
+                self.send(RPi.SENSE_MSG)
+                break
+        """
         if send_msg:
             self.send(RPi.SENSE_MSG)
 
@@ -163,11 +170,10 @@ class RPi:
 
         while True:
             # Ask for sense message again if it's been too long
-            '''
-            if time.time() - sent_time > 2:
+
+            if time.time() - sent_time > 3:
                 self.send(RPi.SENSE_MSG)
                 sent_time = time.time()
-            '''
 
             # Sample message: S:1,1,1,1,1,1
             msg_type, msg = self.receive_msg_with_type()
@@ -203,8 +209,8 @@ class RPi:
     def take_photo(self, obstacles, robot=None):
         # Sample message: CV|7,2,1
         if len(obstacles) != 0:
-            msg = "({},{})".format(*(obstacles[0]))
-        #elif robot is not None:
+            msg = "({},{},{})".format(*(obstacles[0]), int(robot.direction))
+        # elif robot is not None:
         #    msg = "N {},{},{}".format(*robot.pos, int(robot.direction))
         else:
             return
@@ -221,7 +227,7 @@ class RPi:
 
         while True:
             # Ask for calibrate message again if it's been too long
-            if time.time() - sent_time > 1:
+            if time.time() - sent_time > 3:
                 self.send(calibrate_msg)
                 sent_time = time.time()
 

@@ -113,7 +113,6 @@ class RealRun:
         elif msg_type[0:3] == RPi.WAYPOINT_MSG:
             self.rpi.send_obstacle_map(self.explored_map)
 
-
             # Sample message: FPW|1,1
             waypoint_array = msg_type[4:].split(',')
             waypointX = waypoint_array[0]
@@ -185,6 +184,10 @@ class RealRun:
 
     def on_update(self):
         self.update_gui()
+
+        #self.rpi.send_explored_map(self.explored_map)
+        self.rpi.send_obstacle_map(self.explored_map)
+        time.sleep(1)
 
     def calibrate(self):
         if self.robot.direction == Direction.NORTH:

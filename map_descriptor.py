@@ -62,6 +62,7 @@ def generate_map_descriptor(map_grid):
 
             if cell == Cell.UNEXPLORED:
                 explored_bin += "0"
+                obstacle_bin += "0"
 
             elif cell == Cell.FREE:
                 explored_bin += "1"
@@ -72,6 +73,7 @@ def generate_map_descriptor(map_grid):
                 obstacle_bin += "1"
 
     explored_bin += "11"
+    #obstacle_bin += "11"
 
     if len(obstacle_bin) % 8 != 0:
         num_pad_bits = 8 - len(obstacle_bin) % 8
@@ -94,6 +96,7 @@ def generate_map_descriptor_for_android(map_grid):
 
             if cell == Cell.UNEXPLORED:
                 explored_bin += "0"
+                obstacle_bin += "0"
 
             elif cell == Cell.FREE:
                 explored_bin += "1"
@@ -104,12 +107,12 @@ def generate_map_descriptor_for_android(map_grid):
                 obstacle_bin += "1"
 
     explored_bin += "11"
+    #obstacle_bin += "11"
 
     if len(obstacle_bin) % 8 != 0:
         num_pad_bits = 8 - len(obstacle_bin) % 8
         obstacle_bin += "0" * num_pad_bits
 
-    print(obstacle_bin)
     explored_str = bin_to_hex(explored_bin)
     obstacle_str = bin_to_hex(obstacle_bin)
 
