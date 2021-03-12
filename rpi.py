@@ -156,6 +156,7 @@ class RPi:
 
     def receive_sensor_values(self, send_msg=True):
         # Sample message: S
+
         """
         while True:
             msg_type, msg = self.receive_msg_with_type()
