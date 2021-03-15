@@ -324,9 +324,9 @@ class CompleteImageRecExploration(Exploration):
         self.sense_and_repaint()
         self.right_hug()
         self.hug_middle_obstacles()
-        self.explore_unexplored()
-        self.explore_unseen()
-        self.fastest_path_to_start()
+        #self.explore_unexplored()
+        #self.explore_unseen()
+        #self.fastest_path_to_start()
 
     def move(self, movement, sense=True):
         super(CompleteImageRecExploration, self).move(movement, sense)

@@ -7,7 +7,7 @@ from robots import SimulatorBot
 import time
 from collections import deque
 
-MIN_STEPS_WITHOUT_CALIBRATION = 3
+MIN_STEPS_WITHOUT_CALIBRATION = 4
 
 
 class Exploration:
@@ -346,6 +346,7 @@ class Exploration:
         front_direction_vector = Direction.get_direction_vector(front_direction)
         right_direction_vector = Direction.get_direction_vector(right_direction)
 
+        #if self.steps_without_calibration >= MIN_STEPS_WITHOUT_CALIBRATION:
         # Check front
         can_calibrate_front = False
         for i in range(-1, 2):

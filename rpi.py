@@ -157,17 +157,16 @@ class RPi:
 
     def receive_sensor_values(self, send_msg=True):
         # Sample message: S
-
-        
+        """
         while True:
             msg_type, msg = self.receive_msg_with_type()
-            print("The message is (should be DMV)",msg)
+            print("The message is (should be DMV)", msg)
             print("IM STILL WAITING!!!!!")
             if msg == "DMV" or msg == "Robot Ready.":
-                print("I SEND MSG NOW",msg)
+                print("I SEND MSG NOW", msg)
                 self.send(RPi.SENSE_MSG)
                 break
-        
+        """
         #if send_msg:
         #    self.send(RPi.SENSE_MSG)
 
