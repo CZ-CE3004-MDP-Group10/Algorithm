@@ -63,7 +63,7 @@ class RealRun:
                 on_calibrate=self.rpi.calibrate,
                 on_take_photo=self.rpi.take_photo,
                 explored_map=self.explored_map,
-                time_limit=350
+                time_limit=400
             )
 
             c, r = self.robot.pos

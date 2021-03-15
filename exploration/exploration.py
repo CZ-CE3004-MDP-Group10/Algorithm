@@ -8,7 +8,7 @@ import time
 from collections import deque
 
 
-MIN_STEPS_WITHOUT_CALIBRATION = 4
+MIN_STEPS_WITHOUT_CALIBRATION = 5
 
 
 class Exploration:

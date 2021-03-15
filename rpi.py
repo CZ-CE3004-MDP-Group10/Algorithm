@@ -222,6 +222,7 @@ class RPi:
         print("Take photo", msg)
 
         self.send_msg_with_type("CV", msg)
+        time.sleep(0.5)
 
     def calibrate(self, is_front=True):
         # Sample message: f
