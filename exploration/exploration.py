@@ -8,7 +8,7 @@ import time
 from collections import deque
 
 
-MIN_STEPS_WITHOUT_CALIBRATION = 5
+MIN_STEPS_WITHOUT_CALIBRATION = 3
 
 
 class Exploration:
@@ -271,6 +271,7 @@ class Exploration:
         return False
 
     def right_hug(self):
+        time_right_hug = time.time()
         while True:
             if self.is_limit_exceeded:
                 break
@@ -298,6 +299,8 @@ class Exploration:
             else:
                 self.move(Movement.LEFT)
                 self.move(Movement.LEFT)
+
+        print("Time right hug: ", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_right_hug)))
 
     def explore_unexplored(self):
         print("Exploration: Exploring Unexplored Area")

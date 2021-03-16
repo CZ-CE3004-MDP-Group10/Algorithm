@@ -160,6 +160,7 @@ class CompleteImageRecExploration(Exploration):
             self.move(Movement.RIGHT)
 
     def sense_and_repaint(self, sensor_values=None):
+        time_sense = time.time()
         if sensor_values is None:
             sensor_values = self.robot.sense()
 
@@ -200,6 +201,7 @@ class CompleteImageRecExploration(Exploration):
             for c in range(GOAL_POS[0] - 1, GOAL_POS[0] + 2):
                 self.explored_map[r][c] = Cell.FREE
 
+        print("Sense time: ", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_sense)))
         self.on_update_map()
 
     def hug_middle_obstacles(self):
@@ -320,7 +322,6 @@ class CompleteImageRecExploration(Exploration):
         return d
 
     def run_exploration(self):
-        self.start_time = time.time()
         self.sense_and_repaint()
         self.right_hug()
         self.hug_middle_obstacles()

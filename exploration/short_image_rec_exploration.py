@@ -103,7 +103,7 @@ class ShortImageRecExploration(Exploration):
         right = (direction + 1) % 4
         obstacles = self.check_obstacle_side(pos, right)
         if len(obstacles) != 0:
-            self.on_take_photo(obstacles)
+            self.on_take_photo(obstacles, self.robot)
             print('right take photo')
 
     def sense_and_repaint(self, sensor_values=None):

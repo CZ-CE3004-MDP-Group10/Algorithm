@@ -23,8 +23,8 @@ class RPi:
     # Message Types
     HELLO_MSG = "ARD|F1"
     CALIBRATE_MSG = "C"
-    CALIBRATE_FRONT_MSG = "ARD|CF"
-    CALIBRATE_RIGHT_MSG = "ARD|CR"
+    CALIBRATE_FRONT_MSG = "ARD|W"
+    CALIBRATE_RIGHT_MSG = "ARD|D"
     EXPLORE_MSG = "EXP"
     FASTEST_PATH_MSG = "FP"
     WAYPOINT_MSG = "FPW"
@@ -73,7 +73,7 @@ class RPi:
         except Exception as e:
             print("Unable to send message\nError:", e)
 
-    def receive(self, bufsize=2048):
+    def receive(self, bufsize=1024):
         try:
             print("Receiving RPI message: " + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             msg = self.conn.recv(bufsize).decode("utf-8")
@@ -136,8 +136,9 @@ class RPi:
         msg = "{}".format(
             movement_str
         )
-        # self.send_msg_with_type(RPi.MOVEMENT_MSG, msg)
-        self.send_msg_with_type("ARD", msg)
+
+        self.send_msg_with_type("ARD", msg[:1])
+        time.sleep(0.1)
         # Might remove below, need to test
         return self.receive_sensor_values(send_msg=True)
 
@@ -148,7 +149,6 @@ class RPi:
 
     def send_obstacle_map(self, explored_map):
         explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
-        print("=====GRID======: ", grid_dic)
         self.send_msg_with_type("AND", grid_dic)
 
     def send_explored_map(self, explored_map):
@@ -156,41 +156,15 @@ class RPi:
         self.send_msg_with_type("AND", explored_dic)
 
     def receive_sensor_values(self, send_msg=True):
-        # Sample message: S
-        """
-        while True:
-            msg_type, msg = self.receive_msg_with_type()
-            print("The message is (should be DMV)", msg)
-            print("IM STILL WAITING!!!!!")
-            if msg == "DMV" or msg == "Robot Ready.":
-                print("I SEND MSG NOW", msg)
-                self.send(RPi.SENSE_MSG)
-                break
-        """
-        #if send_msg:
-        #    self.send(RPi.SENSE_MSG)
-
-        sent_time = time.time()
 
         while True:
-            # Ask for sense message again if it's been too long
-            '''
-            if time.time() - sent_time > 3:
-                self.send(RPi.SENSE_MSG)
-                sent_time = time.time()
-            '''
             # Sample message: S:1,1,1,1,1,1
             msg_type, msg = self.receive_msg_with_type()
-
-            if msg_type == RPi.QUIT_MSG:
-                return []
 
             m = re.match(r"(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)", msg)
 
             if not bool(m):
                 continue
-
-            print("sensor message", m)
 
             if m is None:
                 print("Unable to receive sensor input")
@@ -222,21 +196,18 @@ class RPi:
         print("Take photo", msg)
 
         self.send_msg_with_type("CV", msg)
-        time.sleep(0.5)
+        time.sleep(1)
 
     def calibrate(self, is_front=True):
         # Sample message: f
         calibrate_msg = RPi.CALIBRATE_FRONT_MSG if is_front else RPi.CALIBRATE_RIGHT_MSG
+
+        time.sleep(0.1)
         self.send(calibrate_msg)
+        time.sleep(0.1)
         sent_time = time.time()
 
         while True:
-            # Ask for calibrate message again if it's been too long
-            '''
-            if time.time() - sent_time > 3:
-                self.send(calibrate_msg)
-                sent_time = time.time()
-            '''
             # Sample message: f
             msg_type, msg = self.receive_msg_with_type()
 
