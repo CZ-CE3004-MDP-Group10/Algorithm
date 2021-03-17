@@ -162,6 +162,8 @@ class RPi:
             msg_type, msg = self.receive_msg_with_type()
 
             m = re.match(r"(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)", msg)
+            if msg=="STOP":
+                return msg
 
             if not bool(m):
                 continue

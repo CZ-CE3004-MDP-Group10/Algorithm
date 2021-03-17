@@ -272,7 +272,9 @@ class Exploration:
 
     def right_hug(self):
         time_right_hug = time.time()
-        while True:
+        flag = True
+        while True and flag:
+            print("FLAG IS",flag)
             if self.is_limit_exceeded:
                 break
 
@@ -284,20 +286,30 @@ class Exploration:
                 self.entered_goal = True
 
             if self.is_stuck_in_loop():
-                self.move(Movement.RIGHT)
+                flag=self.move(Movement.RIGHT)
+                if not flag:
+                    break
                 self.move(Movement.RIGHT)
 
             elif self.check_right():
-                self.move(Movement.RIGHT)
+                flag =self.move(Movement.RIGHT)
+                if not flag:
+                    break
 
             elif self.check_forward():
-                self.move(Movement.FORWARD)
+                flag =self.move(Movement.FORWARD)
+                if not flag:
+                    break
 
             elif self.check_left():
-                self.move(Movement.LEFT)
+                flag =self.move(Movement.LEFT)
+                if not flag:
+                    break
 
             else:
-                self.move(Movement.LEFT)
+                flag = self.move(Movement.LEFT)
+                if not flag:
+                    break
                 self.move(Movement.LEFT)
 
         print("Time right hug: ", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_right_hug)))
@@ -391,12 +403,15 @@ class Exploration:
             self.prev_pos = self.robot.pos
 
         sensor_values = self.robot.move(movement)
-
+        if sensor_values=="STOP":
+            print("I ASKED TO STOP")
+            return False
         if sense:
             self.sense_and_repaint(sensor_values)
 
         self.calibrate(sense)
         self.steps_without_calibration += 1
+        return True
 
     def sense_and_repaint(self, sensor_values=None):
         if sensor_values is None:

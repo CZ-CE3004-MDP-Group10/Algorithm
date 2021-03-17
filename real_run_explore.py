@@ -40,97 +40,97 @@ class RealRun:
         self.rpi.receive_endlessly()
 
     def connect_to_rpi(self):
-        # while True:
-        msg, msg_type = self.rpi.receive_msg_with_type()
+        while True:
+            msg, msg_type = self.rpi.receive_msg_with_type()
 
-        #msg_type = RPi.EXPLORE_MSG
+            #msg_type = RPi.EXPLORE_MSG
 
-        if msg_type == RPi.CALIBRATE_MSG:
-            self.calibrate()
-
-        # Exploration
-        elif msg_type == RPi.EXPLORE_MSG:
-            self.is_running = True
-            self.rpi.set_speed(is_high=True)
-            self.explored_map = generate_unexplored_map()
-            self.gui.map = self.explored_map
-            self.on_update()
-
-            self.exp = Exploration(
-                robot=self.robot,
-                on_update_map=self.on_update,
-                on_calibrate=self.rpi.calibrate,
-                explored_map=self.explored_map,
-                time_limit=350
-            )
-            self.rpi.send("ARD|x")
-
-            self.exp.run_exploration()
-
-            self.is_running = False
-            self.rpi.send(RPi.EXPLORE_MSG)
-
-        # Waypoint
-        elif msg_type[0:3] == RPi.WAYPOINT_MSG:
-            self.rpi.send_obstacle_map(self.explored_map)
-
-            # Sample message: FPW|1,1
-            waypoint_array = msg_type[4:].split(',')
-            waypointX = waypoint_array[0]
-            waypointY = waypoint_array[1]
-            self.waypoint = (int(waypointX), int(waypointY))
-
-            print("Waypoint:", self.waypoint)
-
-        # Reposition
-        elif msg_type == RPi.REPOSITION_MSG:
-            # Sample message: M:1,1 N
-            m = re.match(r"\(?(\d+),\s*(\d+)\)?\s*([NSEW])", msg)
-
-            if m is None:
-                print("Unable to reposition")
-
-            c = int(m.group(1))
-            r = int(m.group(2))
-            self.robot.pos = (c, r)
-            self.robot.direction = Direction.convert_from_string(m.group(3))
-
-            for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
-                for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
-                    self.explored_map[i][j] = Cell.FREE
-
-            self.update_gui()
-
-            if self.robot.pos == START_POS:
+            if msg_type == RPi.CALIBRATE_MSG:
                 self.calibrate()
 
-            self.update_gui()
+            # Exploration
+            elif msg_type == RPi.EXPLORE_MSG:
+                self.is_running = True
+                self.rpi.set_speed(is_high=True)
+                self.explored_map = generate_unexplored_map()
+                self.gui.map = self.explored_map
+                self.on_update()
 
-        # Fastest Path
-        elif msg_type == RPi.FASTEST_PATH_MSG:
-            self.rpi.send_obstacle_map(self.explored_map)
+                self.exp = Exploration(
+                    robot=self.robot,
+                    on_update_map=self.on_update,
+                    on_calibrate=self.rpi.calibrate,
+                    explored_map=self.explored_map,
+                    time_limit=350
+                )
+                self.rpi.send("ARD|x")
 
-            self.is_running = True
+                self.exp.run_exploration()
 
-            self.rpi.set_speed(is_high=True)
+                self.is_running = False
+                self.rpi.send(RPi.EXPLORE_MSG)
 
-            self.robot.pos = START_POS
-            self.update_gui()
+            # Waypoint
+            elif msg_type[0:3] == RPi.WAYPOINT_MSG:
+                self.rpi.send_obstacle_map(self.explored_map)
 
-            fp = CalibrateFastestPath(
-                robot=self.robot,
-                on_calibrate=self.rpi.calibrate,
-                explored_map=self.explored_map,
-                waypoint=self.waypoint
-            )
+                # Sample message: FPW|1,1
+                waypoint_array = msg_type[4:].split(',')
+                waypointX = waypoint_array[0]
+                waypointY = waypoint_array[1]
+                self.waypoint = (int(waypointX), int(waypointY))
 
-            # Run fastest path
-            fp_string = fp.run_fastest_path()
-            self.rpi.send(("ARD|" + fp_string))
+                print("Waypoint:", self.waypoint)
 
-            print("FASTEST PATH COMPLETE!")
+            # Reposition
+            elif msg_type == RPi.REPOSITION_MSG:
+                # Sample message: M:1,1 N
+                m = re.match(r"\(?(\d+),\s*(\d+)\)?\s*([NSEW])", msg)
 
-            self.is_running = False
+                if m is None:
+                    print("Unable to reposition")
+
+                c = int(m.group(1))
+                r = int(m.group(2))
+                self.robot.pos = (c, r)
+                self.robot.direction = Direction.convert_from_string(m.group(3))
+
+                for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
+                    for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
+                        self.explored_map[i][j] = Cell.FREE
+
+                self.update_gui()
+
+                if self.robot.pos == START_POS:
+                    self.calibrate()
+
+                self.update_gui()
+
+            # Fastest Path
+            elif msg_type == RPi.FASTEST_PATH_MSG:
+                self.rpi.send_obstacle_map(self.explored_map)
+
+                self.is_running = True
+
+                self.rpi.set_speed(is_high=True)
+
+                self.robot.pos = START_POS
+                self.update_gui()
+
+                fp = CalibrateFastestPath(
+                    robot=self.robot,
+                    on_calibrate=self.rpi.calibrate,
+                    explored_map=self.explored_map,
+                    waypoint=self.waypoint
+                )
+
+                # Run fastest path
+                fp_string = fp.run_fastest_path()
+                self.rpi.send(("ARD|" + fp_string))
+
+                print("FASTEST PATH COMPLETE!")
+
+                self.is_running = False
 
     def display_gui(self):
         self.gui.start()

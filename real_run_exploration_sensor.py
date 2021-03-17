@@ -42,9 +42,7 @@ class RealRun:
     def connect_to_rpi(self):
         while True:
             msg, msg_type = self.rpi.receive_msg_with_type()
-            print("HELLO 1!!!!")
             #msg_type = RPi.EXPLORE_MSG
-            print("MSG IS",msg_type)
             # Exploration
             if msg_type == RPi.EXPLORE_MSG:
                 print("HELL0!!!!")
