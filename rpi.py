@@ -108,7 +108,7 @@ class RPi:
 
         if msg_type == RPi.QUIT_MSG:
             self.on_quit()
-        print("MSG HERE IS!!!",msg)
+        #print("MSG HERE IS!!!",msg)
         return msg_type, msg
 
     def ping(self):
