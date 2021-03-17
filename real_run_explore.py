@@ -43,7 +43,7 @@ class RealRun:
         # while True:
         msg, msg_type = self.rpi.receive_msg_with_type()
 
-        msg_type = RPi.EXPLORE_MSG
+        #msg_type = RPi.EXPLORE_MSG
 
         if msg_type == RPi.CALIBRATE_MSG:
             self.calibrate()
@@ -63,6 +63,7 @@ class RealRun:
                 explored_map=self.explored_map,
                 time_limit=350
             )
+            self.rpi.send("ARD|x")
 
             self.exp.run_exploration()
 
