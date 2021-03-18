@@ -42,32 +42,23 @@ class RealRun:
     def connect_to_rpi(self):
         while True:
             msg, msg_type = self.rpi.receive_msg_with_type()
+
             #msg_type = RPi.EXPLORE_MSG
             # Exploration
             if msg_type == RPi.EXPLORE_MSG:
-                print("HELL0!!!!")
                 self.is_running = True
                 self.rpi.set_speed(is_high=True)
                 self.explored_map = generate_unexplored_map()
                 self.gui.map = self.explored_map
                 self.on_update()
-                """
-                self.exp = ShortImageRecExploration(
-                    robot=self.robot,
-                    on_update_map=self.on_update,
-                    on_calibrate=self.rpi.calibrate,
-                    on_take_photo=self.rpi.take_photo,
-                    explored_map=self.explored_map,
-                    time_limit=350
-                )
-                """
+
                 self.exp = CompleteImageRecExploration(
                     robot=self.robot,
                     on_update_map=self.on_update,
                     on_calibrate=self.rpi.calibrate,
                     on_take_photo=self.rpi.take_photo,
                     explored_map=self.explored_map,
-                    time_limit=360
+                    time_limit=320
                 )
 
                 c, r = self.robot.pos
@@ -76,9 +67,11 @@ class RealRun:
                         self.exp.explored_map[i][j] = Cell.FREE
 
                 self.update_gui()
-                print("HERE ALR")
+
                 # Run exploration
+                time.sleep(0.5)
                 self.rpi.send("ARD|x")
+                time.sleep(0.5)
                 self.exp.run_exploration()
 
 
@@ -96,6 +89,9 @@ class RealRun:
                 self.rpi.send("CV|Q")
                 self.rpi.send(RPi.EXPLORE_MSG)
 
+            elif msg_type == "S":
+                self.rpi.send("ARD|S")
+
     def display_gui(self):
         self.gui.start()
 
@@ -110,9 +106,8 @@ class RealRun:
     def on_update(self):
         self.update_gui()
 
-        # self.rpi.send_explored_map(self.explored_map)
-        self.rpi.send_obstacle_map(self.explored_map)
-        time.sleep(0.1)
+       #self.rpi.send_obstacle_map(self.explored_map)
+        #time.sleep(0.1)
 
     def calibrate(self):
         if self.robot.direction == Direction.NORTH:

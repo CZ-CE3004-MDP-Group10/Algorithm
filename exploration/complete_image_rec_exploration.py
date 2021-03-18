@@ -5,9 +5,12 @@ from constants import START_POS, GOAL_POS, NUM_ROWS, NUM_COLS
 from robots import SimulatorBot
 import time
 
+
 class CompleteImageRecExploration(Exploration):
-    def __init__(self, robot, on_update_map=None, on_calibrate=None, explored_map=None, coverage_limit=None, time_limit=None, on_take_photo=None):
-        super().__init__(robot, on_update_map=on_update_map, on_calibrate=on_calibrate, explored_map=explored_map, coverage_limit=coverage_limit, time_limit=time_limit)
+    def __init__(self, robot, on_update_map=None, on_calibrate=None, explored_map=None, coverage_limit=None,
+                 time_limit=None, on_take_photo=None):
+        super().__init__(robot, on_update_map=on_update_map, on_calibrate=on_calibrate, explored_map=explored_map,
+                         coverage_limit=coverage_limit, time_limit=time_limit)
 
         self.obstacles = {}
 
@@ -175,14 +178,16 @@ class CompleteImageRecExploration(Exploration):
 
             elif sensor_value is None:
                 for j in range(*sensor.get_range()):
-                    pos_to_mark = (current_sensor_pos[0] + j * direction_vector[0], current_sensor_pos[1] + j * direction_vector[1])
+                    pos_to_mark = (
+                    current_sensor_pos[0] + j * direction_vector[0], current_sensor_pos[1] + j * direction_vector[1])
 
                     if 0 <= pos_to_mark[0] <= NUM_COLS - 1 and 0 <= pos_to_mark[1] <= NUM_ROWS - 1:
                         self.explored_map[pos_to_mark[1]][pos_to_mark[0]] = Cell.FREE
 
             else:
                 for j in range(sensor.get_range()[0], min(sensor.get_range()[1], sensor_value + 1)):
-                    pos_to_mark = (current_sensor_pos[0] + j * direction_vector[0], current_sensor_pos[1] + j * direction_vector[1])
+                    pos_to_mark = (
+                    current_sensor_pos[0] + j * direction_vector[0], current_sensor_pos[1] + j * direction_vector[1])
 
                     if 0 <= pos_to_mark[0] <= NUM_COLS - 1 and 0 <= pos_to_mark[1] <= NUM_ROWS - 1:
                         if j != sensor_value:
@@ -295,7 +300,6 @@ class CompleteImageRecExploration(Exploration):
 
         return pos_to_check
 
-
     def possible_photo_pos(self, goal, direction):
         d = set()
         x, y = goal
@@ -325,9 +329,9 @@ class CompleteImageRecExploration(Exploration):
         self.sense_and_repaint()
         self.right_hug()
         self.hug_middle_obstacles()
-        #self.explore_unexplored()
-        #self.explore_unseen()
-        #self.fastest_path_to_start()
+        self.explore_unexplored()
+        self.explore_unseen()
+        self.fastest_path_to_start()
 
     def move(self, movement, sense=True):
         super(CompleteImageRecExploration, self).move(movement, sense)
