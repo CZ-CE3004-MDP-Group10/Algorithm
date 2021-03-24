@@ -40,57 +40,57 @@ class RealRun:
         self.rpi.receive_endlessly()
 
     def connect_to_rpi(self):
-        while True:
-            msg, msg_type = self.rpi.receive_msg_with_type()
 
-            #msg_type = RPi.EXPLORE_MSG
-            # Exploration
-            if msg_type == RPi.EXPLORE_MSG:
-                self.is_running = True
-                self.rpi.set_speed(is_high=True)
-                self.explored_map = generate_unexplored_map()
-                self.gui.map = self.explored_map
-                self.on_update()
+        msg, msg_type = self.rpi.receive_msg_with_type()
 
-                self.exp = CompleteImageRecExploration(
-                    robot=self.robot,
-                    on_update_map=self.on_update,
-                    on_calibrate=self.rpi.calibrate,
-                    on_take_photo=self.rpi.take_photo,
-                    explored_map=self.explored_map,
-                    time_limit=320
-                )
+        msg_type = RPi.EXPLORE_MSG
+        # Exploration
+        if msg_type == RPi.EXPLORE_MSG:
+            self.is_running = True
+            self.rpi.set_speed(is_high=True)
+            self.explored_map = generate_unexplored_map()
+            self.gui.map = self.explored_map
+            self.on_update()
 
-                c, r = self.robot.pos
-                for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
-                    for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
-                        self.exp.explored_map[i][j] = Cell.FREE
+            self.exp = CompleteImageRecExploration(
+                robot=self.robot,
+                on_update_map=self.on_update,
+                on_calibrate=self.rpi.calibrate,
+                on_take_photo=self.rpi.take_photo,
+                explored_map=self.explored_map,
+                time_limit=320
+            )
 
-                self.update_gui()
+            c, r = self.robot.pos
+            for i in range(max(0, r - 1), min(NUM_ROWS, r + 2)):
+                for j in range(max(0, c - 1), min(NUM_COLS, c + 2)):
+                    self.exp.explored_map[i][j] = Cell.FREE
 
-                # Run exploration
-                time.sleep(0.5)
-                self.rpi.send("ARD|x")
-                time.sleep(0.5)
-                self.exp.run_exploration()
+            self.update_gui()
+
+            # Run exploration
+            time.sleep(0.5)
+            self.rpi.send("ARD|x")
+            time.sleep(0.5)
+            self.exp.run_exploration()
 
 
-                # Prepare robot position for fastest path
+            # Prepare robot position for fastest path
+            """
+                if self.robot.pos == START_POS:
+                    if self.robot.direction == Direction.SOUTH:
+                        self.robot.move(Movement.LEFT)
+                    elif self.robot.direction == Direction.WEST:
+                        self.robot.move(Movement.RIGHT)
+
+                    self.calibrate()
                 """
-                    if self.robot.pos == START_POS:
-                        if self.robot.direction == Direction.SOUTH:
-                            self.robot.move(Movement.LEFT)
-                        elif self.robot.direction == Direction.WEST:
-                            self.robot.move(Movement.RIGHT)
-    
-                        self.calibrate()
-                    """
-                self.is_running = False
-                self.rpi.send("CV|Q")
-                self.rpi.send(RPi.EXPLORE_MSG)
+            self.is_running = False
+            self.rpi.send("CV|Q")
+            self.rpi.send(RPi.EXPLORE_MSG)
 
-            elif msg_type == "S":
-                self.rpi.send("ARD|S")
+        elif msg_type == "S":
+            self.rpi.send("ARD|S")
 
     def display_gui(self):
         self.gui.start()

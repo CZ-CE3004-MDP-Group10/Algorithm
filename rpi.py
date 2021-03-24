@@ -67,8 +67,11 @@ class RPi:
 
     def send(self, msg):
         try:
-            self.conn.sendall(msg.encode("utf-8"))
+            msg_encoded = msg + "\x00" * max(1024 - len(msg), 0)
+            #self.conn.sendall(msg.encode("utf-8"))
+            self.conn.send(msg_encoded.encode("utf-8"))
             print("Message sent:", msg)
+            print("Message length: ", len(msg_encoded))
 
         except Exception as e:
             print("Unable to send message\nError:", e)
@@ -76,8 +79,9 @@ class RPi:
     def receive(self, bufsize=1024):
         try:
             print("Receiving RPI message: " + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
-            msg = self.conn.recv(bufsize).decode("utf-8")
+            msg = self.conn.recv(bufsize).decode("utf-8").strip().strip('\x00')
             print("Message received:", msg)
+            print("Connection: ", self.conn)
             return msg
 
         except Exception as e:
@@ -108,7 +112,7 @@ class RPi:
 
         if msg_type == RPi.QUIT_MSG:
             self.on_quit()
-        #print("MSG HERE IS!!!",msg)
+        # print("MSG HERE IS!!!",msg)
         return msg_type, msg
 
     def ping(self):
@@ -137,6 +141,7 @@ class RPi:
             movement_str
         )
 
+        time.sleep(0.1)
         self.send_msg_with_type("ARD", msg[:1])
         time.sleep(0.1)
         # Might remove below, need to test
@@ -196,7 +201,7 @@ class RPi:
         print("Take photo", msg)
 
         self.send_msg_with_type("CV", msg)
-        time.sleep(1)
+        time.sleep(0.1)
 
     def calibrate(self, is_front=True):
         # Sample message: f

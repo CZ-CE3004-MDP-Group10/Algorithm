@@ -7,8 +7,7 @@ from robots import SimulatorBot
 import time
 from collections import deque
 
-
-MIN_STEPS_WITHOUT_CALIBRATION = 6
+MIN_STEPS_WITHOUT_CALIBRATION = 4
 
 
 class Exploration:
@@ -271,16 +270,15 @@ class Exploration:
         return False
 
     def right_hug(self):
-        time_right_hug = time.time()
         while True:
             if self.is_limit_exceeded:
                 break
 
-            # print_map(self.explored_map, [self.robot.pos])
             if self.entered_goal and self.robot.pos == START_POS:
+                print("Robot reached entered goal and position = start pos")
                 break
 
-            if self.robot.pos == GOAL_POS:
+            if self.robot.pos == START_POS:  # GOAL_POS
                 self.entered_goal = True
 
             if self.is_stuck_in_loop():
@@ -300,10 +298,7 @@ class Exploration:
                 self.move(Movement.LEFT)
                 self.move(Movement.LEFT)
 
-        print("Time right hug: ", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_right_hug)))
-
     def explore_unexplored(self):
-        print("Exploration: Exploring Unexplored Area")
         while True:
             if self.is_limit_exceeded:
                 break
@@ -341,7 +336,7 @@ class Exploration:
         self.sense_and_repaint()
         self.right_hug()
         # self.explore_unexplored()  # might omit
-        # self.fastest_path_to_start() # might omit
+        # self.fastest_path_to_start()  # might omit
 
     def calibrate(self, sense):
         is_calibrated = False

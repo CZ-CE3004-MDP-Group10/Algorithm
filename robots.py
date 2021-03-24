@@ -121,6 +121,7 @@ class RealBot(Robot):
 		return 2
 
 	def sense(self):
+		print("Real sense")
 		return self.get_sensor_values()
 
 
@@ -151,6 +152,7 @@ class SimulatorBot(Robot):
 		for sensor in self.sensors:
 			direction_vector = Direction.get_direction_vector(sensor.get_current_direction(self))
 			sensor_pos = sensor.get_current_pos(self)
+
 			sensor_range = sensor.get_range()
 
 			for i in range(1, sensor_range[1]):
