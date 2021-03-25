@@ -335,8 +335,8 @@ class Exploration:
         self.start_time = time.time()
         self.sense_and_repaint()
         self.right_hug()
-        # self.explore_unexplored()  # might omit
-        # self.fastest_path_to_start()  # might omit
+        #self.explore_unexplored()  # might omit
+        #self.fastest_path_to_start()  # might omit
 
     def calibrate(self, sense):
         is_calibrated = False

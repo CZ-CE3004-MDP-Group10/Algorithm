@@ -152,6 +152,11 @@ class RPi:
         explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
         self.send_msg_with_type(RPi.MDF_MSG, explored_dic + grid_dic)
 
+    def send_correct_map(self, explored_map):
+        explored_dic, grid_dic = generate_map_descriptor(explored_map)
+        print("Correct Map: ", grid_dic)
+        self.send_msg_with_type("AND", grid_dic)
+
     def send_obstacle_map(self, explored_map):
         explored_dic, grid_dic = generate_map_descriptor_for_android(explored_map)
         self.send_msg_with_type("AND", grid_dic)

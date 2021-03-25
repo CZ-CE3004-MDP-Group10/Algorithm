@@ -80,7 +80,10 @@ def generate_map_descriptor(map_grid):
     explored_str = bin_to_hex(explored_bin)
     obstacle_str = bin_to_hex(obstacle_bin)
 
-    return explored_str, obstacle_str
+    explored_dic = json.dumps({"exploredPath": explored_str})
+    grid_dic = json.dumps({"correctPath": obstacle_str})
+
+    return explored_dic, grid_dic
 
 
 # Generates map descriptor for android in the format of {"grid" : "xxx"}

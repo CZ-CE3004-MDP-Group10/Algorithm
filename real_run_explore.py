@@ -40,10 +40,10 @@ class RealRun:
         self.rpi.receive_endlessly()
 
     def connect_to_rpi(self):
-        #while True:
-            #msg, msg_type = self.rpi.receive_msg_with_type()
+        while True:
+            msg, msg_type = self.rpi.receive_msg_with_type()
 
-            msg_type = RPi.EXPLORE_MSG
+            # msg_type = RPi.EXPLORE_MSG
 
             if msg_type == RPi.EXPLORE_MSG:
                 self.is_running = True
@@ -82,12 +82,12 @@ class RealRun:
     def on_update(self):
         self.update_gui()
 
-        #time.sleep(0.1)
+        # time.sleep(0.1)
         self.rpi.send_explored_map(self.explored_map)
-        #time.sleep(0.1)
+        # time.sleep(0.1)
         self.rpi.send_obstacle_map(self.explored_map)
-        #time.sleep(0.1)
-
+        self.rpi.send_correct_map(self.explored_map)
+        # time.sleep(0.1)
 
     def calibrate(self):
         if self.robot.direction == Direction.NORTH:
