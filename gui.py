@@ -41,8 +41,12 @@ class GUI:
 
     def start(self):
         self.root = tk.Tk()
-        self.root.title("MDP")
-
+        self.root.configure(bg='lightblue')
+        self.root.title("Algorithm Simulator")
+        widget = Label(self.root,bg='lightblue')
+        widget.config(text='Algo Simulator!') 
+        widget.config(font=("Courier", 44))
+        widget.pack(side=TOP, expand=YES, fill=BOTH)
         self.display_side_panel()
         self.display_canvas()
 
@@ -53,7 +57,7 @@ class GUI:
 
     def display_canvas(self):
         self.canvas = tk.Canvas(self.root, height=NUM_ROWS * GUI.CELL_SIZE, width=NUM_COLS * GUI.CELL_SIZE, bg='white')
-        self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=0, pady=20)
+        self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=0, pady=5)
 
         # self.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT, padx=20, pady=20)
         self.update_map()
@@ -199,20 +203,24 @@ class SimulatorGUI(GUI):
     def display_side_panel(self):
 
         side_panel = tk.Frame(self.root)
+        side_panel.configure(bg='lightblue')
         left_sidepanel = tk.Frame(side_panel)
+        left_sidepanel.configure(bg='lightblue')
         left_sidepanel.pack(side=LEFT, padx=(18, 10))
         right_sidepanel = tk.Frame(side_panel)
+        right_sidepanel.configure(bg='lightblue')
         right_sidepanel.pack(side=RIGHT, padx=(10, 18))
 
-        side_panel.pack(side=tk.LEFT, padx=0, pady=20)
+        side_panel.pack(side=tk.LEFT, padx=0, pady=0)
 
         # Error Frame
-        self.error_frame = tk.Frame(left_sidepanel)
-        self.error_frame.pack(fill=tk.X, pady=0)
+        #self.error_frame = tk.Frame(left_sidepanel)
+        #self.error_frame.pack(fill=tk.X, pady=0)
+        #self.error_frame.configure(bg='lightblue')
 
         # Algorithms Frame
-        algorithms_frame = tk.Frame(left_sidepanel)
-        algorithms_frame.pack(fill=tk.X, pady=0)
+        algorithms_frame = tk.Frame(left_sidepanel,highlightbackground='black',highlightcolor="black", highlightthickness=1)
+        algorithms_frame.pack(fill=tk.X,side=tk.TOP)
 
         self.create_heading(algorithms_frame, "Algorithms").pack()
         self.create_button(algorithms_frame, "Exploration", lambda: self.execute_thread(self.exploration)) \
@@ -226,10 +234,10 @@ class SimulatorGUI(GUI):
             .pack(fill=tk.X)
 
         # Map Select Frame
-        map_select_frame = tk.Frame(left_sidepanel)
+        map_select_frame = tk.Frame(left_sidepanel,highlightbackground='black',highlightcolor="black", highlightthickness=1)
 
         # map_select_frame = tk.Frame(side_panel)
-        map_select_frame.pack(fill=tk.X, pady=10)
+        map_select_frame.pack(fill=tk.X, pady=35)
 
         self.create_heading(map_select_frame, "Select Map").pack(fill=tk.X)
 
@@ -246,8 +254,8 @@ class SimulatorGUI(GUI):
             .pack(fill=tk.X)
 
         # Exploration Frame
-        exploration_frame = tk.Frame(right_sidepanel)
-        exploration_frame.pack(fill=tk.X, pady=10)
+        exploration_frame = tk.Frame(right_sidepanel,highlightbackground='black',highlightcolor="black", highlightthickness=1)
+        exploration_frame.pack(fill=tk.X, pady=(0,10))
 
         self.create_heading(exploration_frame, "Exploration").pack(fill=tk.X)
 
@@ -273,7 +281,7 @@ class SimulatorGUI(GUI):
         tk.Spinbox(exploration_frame, from_=0, to=360, textvariable=self.time_limit_input).pack(fill=tk.X)
 
         # Waypoint Frame
-        waypoint_frame = tk.Frame(right_sidepanel)
+        waypoint_frame = tk.Frame(right_sidepanel,highlightbackground='black',highlightcolor="black", highlightthickness=1)
         waypoint_frame.pack(fill=tk.X, pady=10)
 
         self.create_heading(waypoint_frame, "Waypoint").pack()
@@ -281,11 +289,11 @@ class SimulatorGUI(GUI):
         self.has_waypoint_input = tk.IntVar()
         tk.Checkbutton(waypoint_frame, text="Use waypoint", variable=self.has_waypoint_input).pack()
 
-        tk.Label(waypoint_frame, text="X").pack(side=tk.LEFT)
+        tk.Label(waypoint_frame, text="X").pack(side=tk.LEFT,padx=(35,0))
         self.waypoint_x_input = tk.IntVar()
         self.waypoint_x_input.set(GOAL_POS[0])
         tk.Spinbox(waypoint_frame, from_=0, to=NUM_COLS - 1, textvariable=self.waypoint_x_input) \
-            .pack(fill=tk.X, side=tk.LEFT)
+            .pack(fill=tk.X, side=tk.LEFT,padx=(0,20))
 
         tk.Label(waypoint_frame, text="Y").pack(side=tk.LEFT)
         self.waypoint_y_input = tk.IntVar()
@@ -294,7 +302,7 @@ class SimulatorGUI(GUI):
             .pack(fill=tk.X, side=tk.LEFT)
 
         # Speed Setting
-        speed_frame = tk.Frame(right_sidepanel)
+        speed_frame = tk.Frame(right_sidepanel,highlightbackground='black',highlightcolor="black", highlightthickness=1)
         speed_frame.pack(fill=tk.X, pady=10)
 
         self.create_heading(speed_frame, "Robot Speed (Moves Per Second)").pack(fill=tk.X)
